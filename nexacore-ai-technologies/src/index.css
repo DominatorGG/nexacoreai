@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand-blue: #111F68;
+  --color-brand-blue-bright: #3B82F6;
+  --color-brand-blue-glow: rgba(37, 99, 235, 0.15);
+  --color-brand-dark: #080A16;
+  --color-brand-darker: #04050B;
+}
+
+/* Base scroll snap behavior for clean screen transitions */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom cyber grid background overlays */
+.cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(37, 99, 235, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(37, 99, 235, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.light .cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(17, 31, 104, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(17, 31, 104, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Custom styled scrollbars inside the application */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-blue-bright);
+  border-radius: 3px;
+}
+
+body {
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+}
+
+/* Glow effects and futuristic components styling */
+.neon-glow {
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+}
+
+.neon-text {
+  text-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+}
+
+/* Animated scanner line effect */
+@keyframes cyber-scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.scanner-line {
+  animation: cyber-scan 4s linear infinite;
+}
