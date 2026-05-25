@@ -317,11 +317,12 @@ export default function Home({ setActivePage }: HomeProps) {
                       <video
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95 mix-blend-screen"
                         autoPlay
-                        loop
                         muted
                         playsInline
-                        onCanPlay={(e) => {
-                          e.currentTarget.playbackRate = 0.45; // Slow-motion breathing loop effect
+                        onEnded={(e) => {
+                          setTimeout(() => {
+                            e.currentTarget.play().catch(() => {});
+                          }, 500); // 0.5s pause/delay at the end of the loop
                         }}
                         style={{ 
                           filter: 'brightness(1.2) contrast(1.15)',
