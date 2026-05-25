@@ -50,7 +50,7 @@ export default function Footer({ setActivePage }: FooterProps) {
   ];
 
   return (
-    <footer className="relative bg-transparent overflow-hidden pt-12 border-t border-[#1E293B]/10">
+    <footer className="relative z-10 bg-transparent overflow-hidden pt-12 border-t border-[#1E293B]/10">
       {/* Cinematic Ambient Glows */}
       <div className="absolute inset-0 cyber-grid opacity-10 pointer-events-none" />
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[180px] bg-[#1D4ED8]/5 blur-[100px] pointer-events-none rounded-t-full" />

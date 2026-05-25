@@ -61,9 +61,9 @@ export default function App() {
         <>
           {/* Deep Blue volumetric base - rises faster */}
           <div 
-            className="fixed bottom-0 left-1/2 -translate-x-1/2 w-[1400px] h-[550px] rounded-full pointer-events-none transition-transform duration-300 ease-out -z-10"
+            className="fixed bottom-0 left-1/2 -translate-x-1/2 w-[1400px] h-[550px] rounded-full pointer-events-none transition-transform duration-300 ease-out z-0"
             style={{
-              background: 'radial-gradient(ellipse at 50% 100%, rgba(29, 78, 216, 0.16) 0%, rgba(37, 99, 235, 0.04) 50%, transparent 100%)',
+              background: 'radial-gradient(ellipse at 50% 100%, rgba(29, 78, 216, 0.28) 0%, rgba(37, 99, 235, 0.08) 50%, transparent 100%)',
               opacity: scrollRatio,
               transform: `translate(-50%, ${160 - scrollRatio * 160}px)`,
               filter: 'blur(100px)',
@@ -71,9 +71,9 @@ export default function App() {
           />
           {/* Electric Cyan volumetric core - rises slower for 3D parallax depth */}
           <div 
-            className="fixed bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-[380px] rounded-full pointer-events-none transition-transform duration-500 ease-out -z-10"
+            className="fixed bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-[380px] rounded-full pointer-events-none transition-transform duration-500 ease-out z-0"
             style={{
-              background: 'radial-gradient(ellipse at 50% 100%, rgba(6, 182, 212, 0.07) 0%, rgba(34, 211, 238, 0.01) 60%, transparent 100%)',
+              background: 'radial-gradient(ellipse at 50% 100%, rgba(6, 182, 212, 0.12) 0%, rgba(34, 211, 238, 0.02) 60%, transparent 100%)',
               opacity: scrollRatio,
               transform: `translate(-50%, ${90 - scrollRatio * 90}px)`,
               filter: 'blur(85px)',
