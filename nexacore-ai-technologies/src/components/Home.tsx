@@ -308,18 +308,36 @@ export default function Home({ setActivePage }: HomeProps) {
                     </button>
                   </div>
 
-                  {/* Right Content (Image) */}
+                  {/* Right Content (Image or Video) */}
                   <div className="absolute top-0 right-0 bottom-0 w-[60%] flex items-center justify-center overflow-hidden pointer-events-none">
-                    {/* Gradient fade to blend image smoothly into the left text area */}
+                    {/* Gradient fade to blend smoothly into the left text area */}
                     <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#050B14] to-transparent z-10" />
                     
-                    <img
-                      src={`${base}images/${s.img}`}
-                      alt={s.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 mix-blend-screen"
-                      style={{ filter: 'brightness(1.1) contrast(1.1)' }}
-                      loading="lazy"
-                    />
+                    {s.num === '02' ? (
+                      <video
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95 mix-blend-screen"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        onCanPlay={(e) => {
+                          e.currentTarget.playbackRate = 0.45; // Slow-motion breathing loop effect
+                        }}
+                        style={{ 
+                          filter: 'brightness(1.2) contrast(1.15)',
+                        }}
+                      >
+                        <source src={`${base}assets/videos/brainai_transparent.webm`} type="video/webm" />
+                      </video>
+                    ) : (
+                      <img
+                        src={`${base}images/${s.img}`}
+                        alt={s.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 mix-blend-screen"
+                        style={{ filter: 'brightness(1.1) contrast(1.1)' }}
+                        loading="lazy"
+                      />
+                    )}
                   </div>
                 </div>
               </Reveal>
