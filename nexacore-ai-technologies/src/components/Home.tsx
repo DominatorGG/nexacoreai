@@ -312,7 +312,20 @@ export default function Home({ setActivePage }: HomeProps) {
                     {/* Gradient fade to blend smoothly into the left text area */}
                     <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#050B14] to-transparent z-10" />
                     
-                    {s.num === '02' ? (
+                    {s.num === '01' ? (
+                      <video
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95 mix-blend-screen"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        style={{ 
+                          filter: 'brightness(1.2) contrast(1.15)',
+                        }}
+                      >
+                        <source src={`${base}assets/videos/datavid_transparent.webm`} type="video/webm" />
+                      </video>
+                    ) : s.num === '02' ? (
                       <video
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95 mix-blend-screen"
                         autoPlay
