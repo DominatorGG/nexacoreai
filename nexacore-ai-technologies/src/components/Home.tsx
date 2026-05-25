@@ -180,16 +180,40 @@ export default function Home({ setActivePage }: HomeProps) {
                 {/* Cinematic Ambient Glow Behind Video */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-[#3B82F6]/20 blur-[100px] rounded-full pointer-events-none" />
 
-                <video
-                  className="relative z-10 w-full h-auto drop-shadow-2xl scale-[1.2]"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  style={{ filter: 'contrast(1.1)', transform: 'translateZ(0)', willChange: 'transform' }}
+                {/* Video with cinematic radial mask for edge fade */}
+                <div 
+                  className="relative z-10 w-full scale-[1.2]"
+                  style={{
+                    maskImage: 'radial-gradient(ellipse 70% 65% at 50% 50%, black 35%, transparent 100%)',
+                    WebkitMaskImage: 'radial-gradient(ellipse 70% 65% at 50% 50%, black 35%, transparent 100%)',
+                  }}
                 >
-                  <source src={`${base}assets/videos/crpnex_transparent.webm`} type="video/webm" />
-                </video>
+                  <video
+                    className="w-full h-auto"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    style={{ filter: 'contrast(1.1)', transform: 'translateZ(0)', willChange: 'transform' }}
+                  >
+                    <source src={`${base}assets/videos/crpnex_transparent.webm`} type="video/webm" />
+                  </video>
+                </div>
+
+                {/* Extra cinematic edge fade overlays for deeper vignette */}
+                <div className="absolute inset-0 z-20 pointer-events-none" style={{
+                  background: `
+                    radial-gradient(ellipse 80% 75% at 50% 50%, transparent 40%, rgba(3,7,18,0.6) 70%, rgba(3,7,18,1) 100%)
+                  `
+                }} />
+                {/* Bottom fade for smooth blend into next section */}
+                <div className="absolute bottom-0 left-0 right-0 h-[40%] z-20 pointer-events-none bg-gradient-to-t from-[#030712] via-[#030712]/60 to-transparent" />
+                {/* Top fade */}
+                <div className="absolute top-0 left-0 right-0 h-[25%] z-20 pointer-events-none bg-gradient-to-b from-[#030712] via-[#030712]/40 to-transparent" />
+                {/* Left fade */}
+                <div className="absolute top-0 left-0 bottom-0 w-[20%] z-20 pointer-events-none bg-gradient-to-r from-[#030712] to-transparent" />
+                {/* Right fade */}
+                <div className="absolute top-0 right-0 bottom-0 w-[20%] z-20 pointer-events-none bg-gradient-to-l from-[#030712] to-transparent" />
               </div>
             </motion.div>
           </div>
