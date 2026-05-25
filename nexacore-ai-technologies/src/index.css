@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -9,11 +9,15 @@
   --color-brand-blue: #111F68;
   --color-brand-blue-bright: #3B82F6;
   --color-brand-blue-glow: rgba(37, 99, 235, 0.15);
-  --color-brand-dark: #080A16;
-  --color-brand-darker: #04050B;
+  --color-brand-cyan: #00D4FF;
+  --color-brand-dark: #030712;
+  --color-brand-darker: #020409;
+  --color-brand-surface: #0A0F1E;
+  --color-brand-card: #0D1225;
+  --color-brand-border: rgba(59, 130, 246, 0.12);
 }
 
-/* Base scroll snap behavior for clean screen transitions */
+/* Smooth scrolling behavior */
 html {
   scroll-behavior: smooth;
 }
@@ -33,7 +37,7 @@ html {
   background-size: 40px 40px;
 }
 
-/* Custom styled scrollbars inside the application */
+/* Custom styled scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -51,9 +55,29 @@ html {
 body {
   overflow-x: hidden;
   font-family: var(--font-sans);
+  background: var(--color-brand-dark);
 }
 
-/* Glow effects and futuristic components styling */
+/* ============================
+   GLASSMORPHISM CARDS
+   ============================ */
+.glass-card {
+  background: linear-gradient(135deg, rgba(13, 18, 37, 0.9) 0%, rgba(10, 15, 30, 0.95) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(59, 130, 246, 0.25);
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.08), 0 8px 32px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
+}
+
+/* ============================
+   GLOW EFFECTS
+   ============================ */
 .neon-glow {
   box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
 }
@@ -61,6 +85,41 @@ body {
 .neon-text {
   text-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
 }
+
+.glow-blue {
+  box-shadow: 0 0 40px rgba(59, 130, 246, 0.15), 0 0 80px rgba(59, 130, 246, 0.05);
+}
+
+.glow-btn {
+  box-shadow: 0 4px 30px rgba(59, 130, 246, 0.35);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glow-btn:hover {
+  box-shadow: 0 6px 40px rgba(59, 130, 246, 0.5);
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* ============================
+   GRADIENT TEXT
+   ============================ */
+.gradient-text {
+  background: linear-gradient(135deg, #3B82F6 0%, #06B6D4 50%, #3B82F6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-subtle {
+  background: linear-gradient(90deg, #3B82F6 0%, #60A5FA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================
+   ANIMATIONS
+   ============================ */
 
 /* Animated scanner line effect */
 @keyframes cyber-scan {
@@ -70,4 +129,136 @@ body {
 
 .scanner-line {
   animation: cyber-scan 4s linear infinite;
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+/* Pulse ring animation */
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 0.2; }
+  100% { transform: scale(0.9); opacity: 0.6; }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 3s ease-in-out infinite;
+}
+
+/* Slow float animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Slow rotation */
+@keyframes slow-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-slow-rotate {
+  animation: slow-rotate 30s linear infinite;
+}
+
+/* Gradient shift animation */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+/* ============================
+   SECTION BACKGROUNDS
+   ============================ */
+.section-dark {
+  background: linear-gradient(180deg, var(--color-brand-dark) 0%, var(--color-brand-darker) 100%);
+}
+
+.section-darker {
+  background: linear-gradient(180deg, var(--color-brand-darker) 0%, var(--color-brand-dark) 100%);
+}
+
+/* ============================
+   IMAGE FADE EDGES
+   ============================ */
+.img-fade-edges {
+  -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 75%);
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 75%);
+}
+
+.img-fade-bottom {
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+
+/* ============================
+   SECTION DIVIDERS
+   ============================ */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.15) 30%, rgba(59, 130, 246, 0.15) 70%, transparent 100%);
+}
+
+/* ============================
+   TRUSTED LOGOS ANIMATION
+   ============================ */
+@keyframes scroll-logos {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-scroll-logos {
+  animation: scroll-logos 25s linear infinite;
+}
+
+/* ============================
+   FEATURE PILL STYLING
+   ============================ */
+.feature-pill {
+  background: rgba(13, 18, 37, 0.8);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.feature-pill:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+/* ============================
+   FORM STYLING
+   ============================ */
+.form-input {
+  background: rgba(10, 15, 30, 0.8);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  color: white;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-brand-blue-bright);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-input::placeholder {
+  color: rgba(148, 163, 184, 0.4);
 }

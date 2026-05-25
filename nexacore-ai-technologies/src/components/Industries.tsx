@@ -117,33 +117,38 @@ export default function Industries() {
   }, [selectedIndustryIdx]);
 
   return (
-    <div className="relative min-h-screen bg-brand-dark pt-28 pb-20 overflow-hidden">
+    <div className="relative min-h-screen bg-[#050B14] pt-32 pb-24 overflow-hidden">
       {/* Immersive Background Canvas */}
-      <div className="absolute inset-0 cyber-grid opacity-35" />
-      <div className="absolute top-[20%] right-[10%] w-[450px] h-[450px] rounded-full bg-brand-blue-bright/4 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[20%] left-[10%] w-[350px] h-[350px] rounded-full bg-brand-blue-bright/5 blur-[100px] pointer-events-none" />
+      <div className="absolute inset-0 cyber-grid opacity-20" />
+      <div className="absolute top-[20%] right-[10%] w-[600px] h-[600px] rounded-full bg-[#1D4ED8]/10 blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-[20%] left-[10%] w-[500px] h-[500px] rounded-full bg-[#3B82F6]/5 blur-[120px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-16">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 space-y-24">
         
-        {/* Simple Page Title Block */}
-        <div className="text-center max-w-2xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-900 border border-brand-blue-bright/20">
-            <Layers className="w-3.5 h-3.5 text-brand-blue-bright light:text-brand-blue" />
-            <span className="font-mono text-[9px] uppercase tracking-widest text-neutral-400">Target Sectors Blueprint</span>
+        {/* Cinematic Header Block */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center max-w-3xl mx-auto space-y-6"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0F172A]/80 border border-[#1E293B] shadow-[inset_0_0_15px_rgba(59,130,246,0.05)]">
+            <Layers className="w-4 h-4 text-[#60A5FA] drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" strokeWidth={1.5} />
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#94A3B8] font-bold">Target Sectors Blueprint</span>
           </div>
-          <h1 className="font-display text-4xl sm:text-6xl font-bold text-white light:text-brand-dark tracking-tight leading-none">
-            Industries <span className="text-brand-blue-bright light:text-brand-blue">Served</span>
+          <h1 className="font-display text-5xl sm:text-7xl font-bold text-white tracking-tight leading-none">
+            Industries <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#60A5FA] to-[#3B82F6] drop-shadow-[0_0_30px_rgba(59,130,246,0.3)]">Served</span>
           </h1>
-          <p className="text-neutral-400 light:text-neutral-600 text-sm sm:text-base leading-relaxed">
+          <p className="text-[#94A3B8] text-lg sm:text-xl font-sans leading-relaxed max-w-2xl mx-auto">
             Every vertical requires specific security guidelines and custom prompt formatting. Nexacore designs role-bound, local network models optimized for individual sector constraints.
           </p>
-        </div>
+        </motion.div>
 
         {/* Industry visual layout: Large Horizontal Tabs + Config Dashboard */}
-        <div className="space-y-8">
+        <div className="space-y-10">
           
           {/* Tabs header bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {industries.map((ind, idx) => {
               const isActive = selectedIndustryIdx === idx;
               return (
@@ -151,17 +156,22 @@ export default function Industries() {
                   id={`tab-ind-${idx}`}
                   key={ind.id}
                   onClick={() => setSelectedIndustryIdx(idx)}
-                  className={`p-4 rounded-xl border font-mono text-xs uppercase font-bold tracking-wider transition-all cursor-pointer text-center relative overflow-hidden flex flex-col justify-center items-center gap-2 focus:outline-none ${
+                  className={`p-5 rounded-2xl border font-mono text-[11px] uppercase font-bold tracking-[0.15em] transition-all duration-500 cursor-pointer text-center relative overflow-hidden flex flex-col justify-center items-center gap-3 focus:outline-none group ${
                     isActive 
-                      ? 'bg-neutral-905 light:bg-neutral-50 border-brand-blue-bright light:border-brand-blue text-brand-blue-bright light:text-brand-blue shadow-lg scale-102 z-10' 
-                      : 'border-neutral-900 bg-neutral-950/40 text-neutral-400 hover:border-neutral-800'
+                      ? 'bg-[#0F172A] border-[#3B82F6]/50 text-[#60A5FA] shadow-[0_10px_30px_rgba(37,99,235,0.1),inset_0_0_20px_rgba(59,130,246,0.15)] scale-[1.02] z-10' 
+                      : 'border-[#1E293B] bg-[#0A1020]/40 text-[#94A3B8] hover:border-[#3B82F6]/30 hover:bg-[#0A1020]/80'
                   }`}
                 >
+                  {/* Glowing Bottom Line for Active Tab */}
+                  {isActive && (
+                    <motion.div layoutId="active-ind-tab" className="absolute bottom-0 left-1/4 right-1/4 h-[2px] bg-[#60A5FA] shadow-[0_0_10px_rgba(96,165,250,1)] rounded-t-full" />
+                  )}
+
                   {/* Icon resolver */}
-                  {ind.id === 'banking' && <Landmark className={`w-5 h-5 ${isActive ? 'text-brand-blue-bright light:text-brand-blue' : 'text-neutral-600'}`} />}
-                  {ind.id === 'finance' && <TrendingUp className={`w-5 h-5 ${isActive ? 'text-brand-blue-bright light:text-brand-blue' : 'text-neutral-600'}`} />}
-                  {ind.id === 'ecommerce' && <ShoppingBag className={`w-5 h-5 ${isActive ? 'text-brand-blue-bright light:text-brand-blue' : 'text-neutral-600'}`} />}
-                  {ind.id === 'healthcare' && <Heart className={`w-5 h-5 ${isActive ? 'text-brand-blue-bright light:text-brand-blue' : 'text-neutral-600'}`} />}
+                  {ind.id === 'banking' && <Landmark className={`w-6 h-6 transition-colors duration-500 ${isActive ? 'text-[#60A5FA] drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]' : 'text-neutral-500 group-hover:text-neutral-400'}`} strokeWidth={1.5} />}
+                  {ind.id === 'finance' && <TrendingUp className={`w-6 h-6 transition-colors duration-500 ${isActive ? 'text-[#60A5FA] drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]' : 'text-neutral-500 group-hover:text-neutral-400'}`} strokeWidth={1.5} />}
+                  {ind.id === 'ecommerce' && <ShoppingBag className={`w-6 h-6 transition-colors duration-500 ${isActive ? 'text-[#60A5FA] drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]' : 'text-neutral-500 group-hover:text-neutral-400'}`} strokeWidth={1.5} />}
+                  {ind.id === 'healthcare' && <Heart className={`w-6 h-6 transition-colors duration-500 ${isActive ? 'text-[#60A5FA] drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]' : 'text-neutral-500 group-hover:text-neutral-400'}`} strokeWidth={1.5} />}
                   <span>{ind.name.split(' & ')[0]}</span>
                 </button>
               );
@@ -169,31 +179,41 @@ export default function Industries() {
           </div>
 
           {/* Large Interactive Visual Dashboard */}
-          <div className="bg-neutral-900/90 light:bg-neutral-100 border border-neutral-800 light:border-neutral-200 rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+          <motion.div 
+            key={selectedIndustryIdx}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-[#0A1020]/80 backdrop-blur-2xl border border-[#1E293B] rounded-3xl p-8 sm:p-12 shadow-[0_20px_60px_rgba(0,0,0,0.6),inset_0_0_40px_rgba(30,41,59,0.5)] relative overflow-hidden"
+          >
+            {/* Ambient inner glow */}
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#1D4ED8]/5 blur-[120px] pointer-events-none" />
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch relative z-10">
               
               {/* Left Column: Sector Specs & Use-Case detailed analysis */}
-              <div className="lg:col-span-6 space-y-6 flex flex-col justify-between">
-                <div className="space-y-4">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-neutral-950 border border-neutral-850 font-mono text-[9px] text-brand-blue-bright light:text-brand-blue font-bold uppercase">
+              <div className="lg:col-span-6 space-y-8 flex flex-col justify-between">
+                <div className="space-y-6">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0F172A] border border-[#1E293B] font-mono text-[10px] text-[#60A5FA] font-bold uppercase tracking-[0.15em] shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#60A5FA] animate-pulse" />
                     Core Target Case: {industries[selectedIndustryIdx].useCase}
                   </div>
-                  <h3 className="font-display text-2xl sm:text-3xl font-bold text-white light:text-brand-dark">
+                  <h3 className="font-display text-4xl sm:text-5xl font-bold text-white tracking-tight leading-tight">
                     {industries[selectedIndustryIdx].name}
                   </h3>
-                  <p className="text-neutral-400 light:text-neutral-600 leading-relaxed text-sm">
+                  <p className="text-[#94A3B8] leading-relaxed text-[15px] font-sans">
                     {industries[selectedIndustryIdx].description}
                   </p>
                 </div>
 
                 {/* Technical Stack Pills */}
-                <div className="space-y-2 pt-4 border-t border-neutral-800/40 light:border-neutral-200/40">
-                  <span className="block font-mono text-[9px] uppercase tracking-wider text-neutral-500 font-semibold">
+                <div className="space-y-4 pt-6 border-t border-[#1E293B]">
+                  <span className="block font-mono text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-bold">
                     Engineered Technology Architecture
                   </span>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-3">
                     {industries[selectedIndustryIdx].techStack.map((tech, i) => (
-                      <span key={i} className="px-2.5 py-1 bg-brand-dark rounded text-[10px] font-mono text-neutral-300 border border-neutral-800">
+                      <span key={i} className="px-3.5 py-1.5 bg-[#050B14] rounded-md text-[11px] font-mono text-neutral-400 border border-[#1E293B] shadow-[inset_0_0_8px_rgba(0,0,0,0.5)]">
                         {tech}
                       </span>
                     ))}
@@ -202,22 +222,22 @@ export default function Industries() {
               </div>
 
               {/* Right Column: Live Infographics & Metric outcomes */}
-              <div className="lg:col-span-6 flex flex-col justify-between bg-neutral-950 border border-neutral-900 rounded-xl p-6 relative gap-8">
-                <div className="absolute top-4 right-4 flex items-center gap-1 font-mono text-[8px] text-zinc-600 uppercase">
-                  <Activity className="w-3 h-3 text-brand-blue-bright light:text-brand-blue animate-pulse" />
+              <div className="lg:col-span-6 flex flex-col justify-between bg-[#050B14] border border-[#1E293B] rounded-2xl p-8 relative gap-8 shadow-[inset_0_0_30px_rgba(0,0,0,0.8)] overflow-hidden">
+                <div className="absolute top-5 right-5 flex items-center gap-2 font-mono text-[9px] text-[#64748B] uppercase font-bold tracking-widest">
+                  <Activity className="w-3.5 h-3.5 text-[#60A5FA] animate-pulse drop-shadow-[0_0_5px_rgba(96,165,250,0.8)]" />
                   Live HUD telemetry
                 </div>
 
                 {/* Target Metric Arrays */}
-                <div className="space-y-3.5">
-                  <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest block mb-1">Empirical Speed Gains:</span>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="space-y-4 mt-4">
+                  <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-[0.2em] font-bold block mb-2">Empirical Speed Gains:</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {industries[selectedIndustryIdx].impactMetrics.map((met, idx) => (
-                      <div key={idx} className="p-3 bg-brand-dark rounded-lg border border-neutral-900 text-center flex flex-col justify-center">
-                        <span className="block font-display text-base font-bold text-white font-mono tracking-tight leading-none text-center">
+                      <div key={idx} className="p-4 bg-[#0A1020]/50 rounded-xl border border-[#1E293B] text-center flex flex-col justify-center shadow-[inset_0_0_10px_rgba(0,0,0,0.5)]">
+                        <span className="block font-display text-xl font-bold text-white tracking-tight leading-none text-center">
                           {met.value}
                         </span>
-                        <span className="block text-[8px] text-brand-blue-bright light:text-brand-blue font-mono uppercase tracking-wider mt-1.5 leading-tight text-center">
+                        <span className="block text-[9px] text-[#60A5FA] font-mono uppercase tracking-widest mt-2 leading-tight text-center">
                           {met.label}
                         </span>
                       </div>
@@ -226,8 +246,8 @@ export default function Industries() {
                 </div>
 
                 {/* Sector Simulator Infographic Visuals */}
-                <div className="h-32 bg-brand-dark rounded-lg border border-neutral-900 relative p-4 flex flex-col justify-between overflow-hidden">
-                  <span className="font-mono text-[8px] text-neutral-500 uppercase">Simulated Neural Flow:</span>
+                <div className="h-40 bg-[#0A1020]/50 rounded-xl border border-[#1E293B] relative p-5 flex flex-col justify-between overflow-hidden shadow-[inset_0_0_15px_rgba(0,0,0,0.5)]">
+                  <span className="font-mono text-[9px] text-neutral-500 font-bold tracking-[0.2em] uppercase relative z-10">Simulated Neural Flow:</span>
 
                   {/* Dynamic Graphic animations based on selected industry */}
                   <div className="flex-1 my-2 relative flex items-center justify-center">
@@ -238,14 +258,14 @@ export default function Industries() {
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0 }}
-                          className="w-full h-full flex flex-col items-center justify-center gap-2"
+                          className="w-full h-full flex flex-col items-center justify-center gap-3"
                         >
-                          <div className="flex items-center gap-3">
-                            <Landmark className="w-8 h-8 text-brand-blue-bright animate-pulse" />
-                            <div className="h-8 w-[1px] bg-neutral-800" />
+                          <div className="flex items-center gap-4">
+                            <Landmark className="w-10 h-10 text-[#60A5FA] animate-pulse drop-shadow-[0_0_10px_rgba(96,165,250,0.8)]" strokeWidth={1} />
+                            <div className="h-10 w-[1px] bg-[#1E293B]" />
                             <div className="text-left font-mono">
-                              <span className="text-[10px] text-emerald-400 font-bold block">HSM SECURE ENCLAVE</span>
-                              <span className="text-[8px] text-zinc-500 block">ENCRYPTION: AES-256-GCM</span>
+                              <span className="text-[11px] text-emerald-400 font-bold tracking-widest block drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]">HSM SECURE ENCLAVE</span>
+                              <span className="text-[9px] text-neutral-500 block mt-1 tracking-wider">ENCRYPTION: AES-256-GCM</span>
                             </div>
                           </div>
                         </motion.div>
@@ -256,16 +276,16 @@ export default function Industries() {
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0 }}
-                          className="w-4/5 h-full border border-dashed border-brand-blue-bright/20 rounded flex items-center justify-around"
+                          className="w-4/5 h-full border border-dashed border-[#3B82F6]/30 rounded-lg flex items-center justify-around bg-[#0F172A]/50"
                         >
                           {/* Financial risk indicators */}
                           <div className="text-center">
-                            <span className="font-mono text-[9px] text-zinc-500 block">RISK FACTOR:</span>
-                            <span className="font-mono text-sm text-emerald-400 font-bold block">LOW SECURE</span>
+                            <span className="font-mono text-[9px] text-neutral-500 font-bold tracking-widest block mb-1">RISK FACTOR:</span>
+                            <span className="font-mono text-[13px] text-emerald-400 font-bold block tracking-wider drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]">LOW SECURE</span>
                           </div>
-                          <div className="w-[1px] h-8 bg-neutral-800" />
+                          <div className="w-[1px] h-10 bg-[#1E293B]" />
                           <div className="text-center">
-                            <span className="font-mono text-sm text-white font-bold block">&lt; 1.2ms</span>
+                            <span className="font-mono text-lg text-white font-bold tracking-widest block drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">&lt; 1.2ms</span>
                           </div>
                         </motion.div>
                       )}
@@ -275,11 +295,12 @@ export default function Industries() {
                           initial={{ opacity: 0, rotate: 0 }}
                           animate={{ opacity: 1, rotate: 360 }}
                           exit={{ opacity: 0 }}
-                          transition={{ repeat: Infinity, duration: 15, ease: 'linear' }}
-                          className="w-16 h-16 relative border border-separate border-neutral-800 rounded-full flex items-center justify-center"
+                          transition={{ repeat: Infinity, duration: 20, ease: 'linear' }}
+                          className="w-20 h-20 relative border border-dashed border-[#3B82F6]/40 rounded-full flex items-center justify-center"
                         >
-                          <ShoppingBag className="w-4 h-4 text-brand-blue-bright light:text-brand-blue" />
-                          <div className="absolute top-0 w-2.5 h-2.5 rounded-full bg-brand-blue-bright border border-white" />
+                          <ShoppingBag className="w-6 h-6 text-[#60A5FA] drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" strokeWidth={1} />
+                          <div className="absolute top-[-4px] w-2.5 h-2.5 rounded-full bg-[#60A5FA] shadow-[0_0_10px_rgba(96,165,250,1)]" />
+                          <div className="absolute bottom-[-4px] w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,1)]" />
                         </motion.div>
                       )}
                       {selectedIndustryIdx === 3 && (
@@ -288,16 +309,16 @@ export default function Industries() {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
-                          className="w-full h-full flex justify-around items-center"
+                          className="w-full h-full flex justify-around items-center px-4"
                         >
                           {/* Simulated patient diagnostics node bar charts */}
-                          {[40, 80, 20, 95, 55, 10].map((val, i) => (
-                            <div key={i} className="w-4 bg-neutral-900 h-16 rounded-sm relative overflow-hidden">
+                          {[40, 80, 20, 95, 55, 15].map((val, i) => (
+                            <div key={i} className="w-5 bg-[#0F172A] border border-[#1E293B] h-20 rounded-md relative overflow-hidden">
                               <motion.div
                                 initial={{ height: 0 }}
                                 animate={{ height: `${val}%` }}
-                                transition={{ delay: i * 0.1, duration: 1 }}
-                                className="absolute bottom-0 w-full bg-brand-blue-bright"
+                                transition={{ delay: i * 0.1, duration: 1, ease: 'easeOut' }}
+                                className="absolute bottom-0 w-full bg-gradient-to-t from-[#1D4ED8] to-[#60A5FA] shadow-[0_0_10px_rgba(96,165,250,0.8)]"
                               />
                             </div>
                           ))}
@@ -307,15 +328,15 @@ export default function Industries() {
                   </div>
 
                   {/* Live ticker logs footer inside visual panel */}
-                  <div className="border-t border-neutral-900 pt-1.5 flex items-center gap-1.5 font-mono text-[8px] text-neutral-400">
-                    <span className="text-brand-blue-bright light:text-brand-blue font-bold">&gt;&gt;</span>
+                  <div className="border-t border-[#1E293B] pt-2.5 flex items-center gap-2 font-mono text-[9px] text-[#94A3B8] relative z-10 font-bold tracking-widest">
+                    <span className="text-[#60A5FA] drop-shadow-[0_0_5px_rgba(96,165,250,0.8)]">&gt;&gt;</span>
                     <span className="truncate">{tickerLogs[0] || 'System waiting on user selection...'}</span>
                   </div>
                 </div>
               </div>
               
             </div>
-          </div>
+          </motion.div>
 
         </div>
 

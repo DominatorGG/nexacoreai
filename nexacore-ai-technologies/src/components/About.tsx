@@ -6,17 +6,17 @@ import { TeamMember } from '../types';
 export default function About() {
   const values = [
     {
-      icon: <Cpu className="w-6 h-6 text-brand-blue-bright light:text-brand-blue" />,
+      icon: <Cpu className="w-5 h-5 text-[#60A5FA] drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" strokeWidth={1.5} />,
       title: "Model Sovereignty",
       desc: "We believe in private models and edge-hosted data storage. Intellectual property must never be shared across public cloud proxies."
     },
     {
-      icon: <Compass className="w-6 h-6 text-brand-blue-bright light:text-brand-blue" />,
+      icon: <Compass className="w-5 h-5 text-[#60A5FA] drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" strokeWidth={1.5} />,
       title: "Pragmatic Intelligence",
       desc: "No corporate fluff. We build AI RAG engines to directly impact business speeds and automate core engineering, delivering high ROI."
     },
     {
-      icon: <Milestone className="w-6 h-6 text-brand-blue-bright light:text-brand-blue" />,
+      icon: <Milestone className="w-5 h-5 text-[#60A5FA] drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" strokeWidth={1.5} />,
       title: "Sustained Evolution",
       desc: "Our engineering targets dynamic self-correcting swarms, adapting to changing business parameters with zero manual recalibration."
     }
@@ -46,145 +46,174 @@ export default function About() {
   ];
 
   const getTeamIcon = (name: string) => {
-    const cls = "w-8 h-8 text-brand-blue-bright light:text-brand-blue group-hover:scale-110 transition-transform duration-300";
+    const cls = "w-7 h-7 text-[#60A5FA] drop-shadow-[0_0_10px_rgba(96,165,250,0.6)] group-hover:scale-110 transition-transform duration-500 group-hover:drop-shadow-[0_0_15px_rgba(96,165,250,0.9)]";
     switch (name) {
-      case "AI Engineers":
-        return <Cpu className={cls} />;
-      case "Data Engineers":
-        return <Database className={cls} />;
-      case "Cloud & Deployment Engineers":
-        return <Server className={cls} />;
-      case "UI Engineers":
-        return <Layout className={cls} />;
-      default:
-        return <Cpu className={cls} />;
+      case "AI Engineers": return <Cpu className={cls} strokeWidth={1.2} />;
+      case "Data Engineers": return <Database className={cls} strokeWidth={1.2} />;
+      case "Cloud & Deployment Engineers": return <Server className={cls} strokeWidth={1.2} />;
+      case "UI Engineers": return <Layout className={cls} strokeWidth={1.2} />;
+      default: return <Cpu className={cls} strokeWidth={1.2} />;
     }
   };
 
   return (
-    <div className="relative min-h-screen bg-brand-dark pt-28 pb-20 overflow-hidden">
-      {/* Visual background assets */}
-      <div className="absolute inset-0 cyber-grid opacity-30 pointer-events-none" />
-      <div className="absolute top-[10%] right-0 w-[450px] h-[450px] rounded-full bg-brand-blue-bright/5 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[10%] left-0 w-[350px] h-[350px] rounded-full bg-brand-blue-bright/4 blur-[100px] pointer-events-none" />
+    <div className="relative min-h-screen bg-[#050B14] pt-32 pb-24 overflow-hidden">
+      {/* Cinematic Background Assets */}
+      <div className="absolute inset-0 cyber-grid opacity-20 pointer-events-none" />
+      <div className="absolute top-[10%] right-0 w-[600px] h-[600px] rounded-full bg-[#1D4ED8]/10 blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-[20%] left-0 w-[500px] h-[500px] rounded-full bg-[#3B82F6]/5 blur-[120px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-20">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 space-y-28">
         
         {/* Cinematic Header Block */}
-        <div className="text-center max-w-3xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-900 border border-brand-blue-bright/20">
-            <Users className="w-3.5 h-3.5 text-brand-blue-bright light:text-brand-blue" />
-            <span className="font-mono text-[9px] uppercase tracking-widest text-neutral-400">Core Identity Protocol</span>
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center max-w-3xl mx-auto space-y-6"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0F172A]/80 border border-[#1E293B] shadow-[inset_0_0_15px_rgba(59,130,246,0.05)]">
+            <Users className="w-4 h-4 text-[#60A5FA] drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" strokeWidth={1.5} />
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#94A3B8] font-bold">Core Identity Protocol</span>
           </div>
-          <h1 className="font-display text-4xl sm:text-6xl font-bold text-white light:text-brand-dark tracking-tight leading-none">
-            About <span className="text-brand-blue-bright light:text-brand-blue">Nexacore</span>
+          <h1 className="font-display text-5xl sm:text-7xl font-bold text-white tracking-tight leading-none">
+            About <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#60A5FA] to-[#3B82F6] drop-shadow-[0_0_30px_rgba(59,130,246,0.3)]">Nexacore</span>
           </h1>
-          <p className="text-neutral-400 light:text-neutral-600 text-base sm:text-lg">
+          <p className="text-[#94A3B8] text-lg sm:text-xl font-sans leading-relaxed max-w-2xl mx-auto">
             We are a team of neural researchers, vector database developers, and multi-agent systems engineers localized in the Silicon Valley of India, Bengaluru, driven to replace manual digital workflows with corporate-bound autonomous entities.
           </p>
-        </div>
+        </motion.div>
 
         {/* Narrative Block: Vision & Mission Dual Pillars */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
           <motion.div
-            whileHover={{ y: -5 }}
-            className="p-8 sm:p-10 rounded-2xl bg-neutral-900/60 light:bg-neutral-50 border border-neutral-800 light:border-neutral-200 shadow-2xl flex flex-col justify-between"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -5, scale: 1.01 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="p-10 sm:p-12 rounded-3xl bg-[#0A1020]/90 backdrop-blur-xl border border-[#1E293B] shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_0_30px_rgba(30,41,59,0.5)] flex flex-col justify-between group"
           >
-            <div className="space-y-4">
-              <div className="p-3 w-fit rounded-lg bg-brand-blue-bright/10 border border-brand-blue-bright/20">
-                <Eye className="w-6 h-6 text-brand-blue-bright light:text-brand-blue" />
+            <div className="space-y-6">
+              <div className="p-3.5 w-fit rounded-xl bg-[#0F172A] border border-[#1E293B] group-hover:border-[#3B82F6]/40 transition-colors duration-500 shadow-[inset_0_0_15px_rgba(0,0,0,0.5)]">
+                <Eye className="w-7 h-7 text-[#60A5FA] drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" strokeWidth={1.5} />
               </div>
-              <h3 className="font-display text-2xl font-bold text-white light:text-brand-dark">Our Ultimate Vision</h3>
-              <p className="text-neutral-400 light:text-neutral-600 leading-relaxed text-sm">
+              <h3 className="font-display text-3xl font-bold text-white tracking-tight group-hover:text-[#60A5FA] transition-colors duration-500">Our Ultimate Vision</h3>
+              <p className="text-[#94A3B8] leading-relaxed text-[15px] font-sans">
                 To create a state of absolute digital autonomy where enterprise frameworks coordinate their own expansion, code optimization, data analysis, and security updates seamlessly—safeguarding corporate data assets entirely on sovereign, localized computing grids. We work to usher in the post-manual workflows era.
               </p>
             </div>
-            <div className="pt-6 font-mono text-[10px] text-brand-blue-bright light:text-brand-blue tracking-widest uppercase flex items-center gap-1.5 border-t border-neutral-800/40 mt-6 font-bold">
+            <div className="pt-6 font-mono text-[11px] text-[#3B82F6] tracking-[0.2em] uppercase flex items-center justify-between border-t border-[#1E293B] mt-8 font-bold">
               <span>Sovereignty Priority Axis</span>
-              <ArrowUpRight className="w-3 h-3" />
+              <ArrowUpRight className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" strokeWidth={1.5} />
             </div>
           </motion.div>
 
           <motion.div
-            whileHover={{ y: -5 }}
-            className="p-8 sm:p-10 rounded-2xl bg-neutral-900/60 light:bg-neutral-50 border border-neutral-800 light:border-neutral-200 shadow-2xl flex flex-col justify-between"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30, delay: 0.1 }}
+            whileHover={{ y: -5, scale: 1.01 }}
+            className="p-10 sm:p-12 rounded-3xl bg-[#0A1020]/90 backdrop-blur-xl border border-[#1E293B] shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_0_30px_rgba(30,41,59,0.5)] flex flex-col justify-between group"
           >
-            <div className="space-y-4">
-              <div className="p-3 w-fit rounded-lg bg-brand-blue-bright/10 border border-brand-blue-bright/20">
-                <Award className="w-6 h-6 text-brand-blue-bright light:text-brand-blue" />
+            <div className="space-y-6">
+              <div className="p-3.5 w-fit rounded-xl bg-[#0F172A] border border-[#1E293B] group-hover:border-[#3B82F6]/40 transition-colors duration-500 shadow-[inset_0_0_15px_rgba(0,0,0,0.5)]">
+                <Award className="w-7 h-7 text-[#60A5FA] drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" strokeWidth={1.5} />
               </div>
-              <h3 className="font-display text-2xl font-bold text-white light:text-brand-dark">Our Engineering Mission</h3>
-              <p className="text-neutral-400 light:text-neutral-600 leading-relaxed text-sm">
-                By designing isolated, private-host RAG vector architectures, state-of-the-art token scaling mechanics, and collaborative role-based agent hives, we transform large-scale manual organizational tasks into instantaneous automated pipelines. We engineering practical microsecond model performance.
+              <h3 className="font-display text-3xl font-bold text-white tracking-tight group-hover:text-[#60A5FA] transition-colors duration-500">Our Engineering Mission</h3>
+              <p className="text-[#94A3B8] leading-relaxed text-[15px] font-sans">
+                By designing isolated, private-host RAG vector architectures, state-of-the-art token scaling mechanics, and collaborative role-based agent hives, we transform large-scale manual organizational tasks into instantaneous automated pipelines. We engineer practical microsecond model performance.
               </p>
             </div>
-            <div className="pt-6 font-mono text-[10px] text-brand-blue-bright light:text-brand-blue tracking-widest uppercase flex items-center gap-1.5 border-t border-neutral-800/40 mt-6 font-bold">
+            <div className="pt-6 font-mono text-[11px] text-[#3B82F6] tracking-[0.2em] uppercase flex items-center justify-between border-t border-[#1E293B] mt-8 font-bold">
               <span>Latency Reductions Target</span>
-              <ArrowUpRight className="w-3 h-3" />
+              <ArrowUpRight className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" strokeWidth={1.5} />
             </div>
           </motion.div>
         </div>
 
         {/* Corporate Core Values Grid */}
-        <div className="space-y-8">
-          <div className="text-center space-y-1">
-            <h3 className="font-display text-3xl font-bold text-white light:text-brand-dark">Our Foundations</h3>
-            <p className="text-neutral-500 text-sm">The mathematical alignment guiding our computational frameworks</p>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="space-y-12"
+        >
+          <div className="text-center space-y-3">
+            <h3 className="font-display text-4xl font-bold text-white tracking-tight">Our Foundations</h3>
+            <p className="text-[#64748B] text-base font-sans">The mathematical alignment guiding our computational frameworks</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {values.map((v, i) => (
-              <div 
-                key={i} 
-                className="p-6 rounded-xl bg-neutral-950/60 light:bg-white border border-neutral-800 light:border-neutral-100 flex flex-col space-y-4 shadow-lg hover:border-brand-blue-bright/30 transition-colors"
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -4 }}
+                className="p-8 rounded-2xl bg-[#0A1020]/80 backdrop-blur-md border border-[#1E293B] flex flex-col space-y-5 hover:shadow-[0_10px_40px_rgba(37,99,235,0.1),inset_0_0_20px_rgba(59,130,246,0.05)] hover:border-[#3B82F6]/30 transition-all duration-500 group"
               >
-                <div className="p-2 w-fit bg-neutral-900 rounded-lg border border-neutral-800">{v.icon}</div>
-                <h4 className="font-display font-bold text-lg text-white light:text-brand-dark">{v.title}</h4>
-                <p className="text-neutral-400 light:text-neutral-600 text-xs sm:text-sm leading-relaxed">{v.desc}</p>
-              </div>
+                <div className="p-3 w-fit bg-[#0F172A] rounded-xl border border-[#1E293B] shadow-[inset_0_0_10px_rgba(0,0,0,0.5)] group-hover:border-[#3B82F6]/40 transition-colors">
+                  {v.icon}
+                </div>
+                <h4 className="font-display font-bold text-2xl text-white tracking-tight">{v.title}</h4>
+                <p className="text-[#94A3B8] text-[14px] leading-relaxed font-sans">{v.desc}</p>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Executive Swarm Intelligence: Corporate Team */}
-        <div className="space-y-8">
-          <div className="text-center space-y-1">
-            <h3 className="font-display text-3xl font-bold text-white light:text-brand-dark">Our Team</h3>
-            <p className="text-neutral-500 text-sm">Our expert divisions across neural intelligence, high-integrity vector systems, secure cloud orchestration, and responsive interfaces</p>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="space-y-12"
+        >
+          <div className="text-center space-y-3">
+            <h3 className="font-display text-4xl font-bold text-white tracking-tight">Our Team</h3>
+            <p className="text-[#64748B] text-base font-sans max-w-2xl mx-auto">Our expert divisions across neural intelligence, high-integrity vector systems, secure cloud orchestration, and responsive interfaces</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {team.map((member, i) => (
               <motion.div
                 key={i}
-                className="group relative bg-neutral-900 light:bg-neutral-50 border border-neutral-800 light:border-neutral-200 rounded-2xl p-6 shadow-xl overflow-hidden"
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, type: 'spring', stiffness: 200 }}
+                className="group relative bg-[#0A1020]/90 backdrop-blur-xl border border-[#1E293B] rounded-3xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden hover:border-[#3B82F6]/30 transition-all duration-500"
+                whileHover={{ y: -8 }}
               >
                 {/* Tech Icon Visual Element replacing team member avatar */}
-                <div className="relative w-14 h-14 rounded-xl flex items-center justify-center mb-5 bg-neutral-950/85 light:bg-neutral-100 border border-brand-blue-bright/20 shadow-inner">
+                <div className="relative w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-[#0F172A] border border-[#1E293B] shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] z-10 group-hover:border-[#3B82F6]/40 transition-colors duration-500">
                   {getTeamIcon(member.name)}
-                  {/* Subtle neon glow overlay on hover */}
-                  <div className="absolute inset-0 rounded-xl bg-brand-blue-bright/0 group-hover:bg-brand-blue-bright/5 transition-colors duration-300" />
                 </div>
 
-                <div className="space-y-1.5">
-                  <h4 className="font-display font-bold text-lg text-white light:text-brand-dark group-hover:text-brand-blue-bright light:group-hover:text-brand-blue transition-colors">
+                <div className="space-y-2.5 relative z-10">
+                  <h4 className="font-display font-bold text-xl text-white tracking-tight group-hover:text-[#60A5FA] transition-colors duration-300">
                     {member.name}
                   </h4>
-                  <span className="block font-mono text-[10px] tracking-widest text-brand-blue-bright light:text-brand-blue uppercase font-semibold">
+                  <span className="block font-mono text-[10px] tracking-[0.15em] text-[#3B82F6] uppercase font-bold">
                     {member.role}
                   </span>
-                  <p className="text-neutral-400 light:text-neutral-600 font-sans text-xs pt-2.5 leading-relaxed">
+                  <p className="text-[#94A3B8] font-sans text-[13px] pt-3 leading-relaxed">
                     {member.bio}
                   </p>
                 </div>
 
+                {/* Cinematic Ambient Hover Glow inside card */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#1D4ED8]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
                 {/* Styled geometric design lines in bottom-right corner */}
-                <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-neutral-800 light:border-neutral-200 group-hover:border-brand-blue-bright transition-colors m-3" />
+                <div className="absolute bottom-0 right-0 w-12 h-12 border-b border-r border-[#1E293B] group-hover:border-[#3B82F6]/50 transition-colors duration-500 rounded-br-2xl m-4 opacity-50 group-hover:opacity-100" />
               </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
       </div>
     </div>

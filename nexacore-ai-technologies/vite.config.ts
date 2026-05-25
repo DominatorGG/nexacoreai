@@ -5,7 +5,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: '/Nexacore/', // 👈 ADD THIS LINE HERE
+    base: '/nexacoreai/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

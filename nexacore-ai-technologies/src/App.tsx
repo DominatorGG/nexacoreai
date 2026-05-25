@@ -33,7 +33,7 @@ export default function App() {
       isDark 
         ? 'dark bg-brand-dark text-neutral-200' 
         : 'light bg-neutral-50 text-neutral-800'
-    }`}>
+    }`} style={{ background: isDark ? '#030712' : undefined }}>
       {/* Prime Header Navigation bar */}
       <Header 
         activePage={activePage} 

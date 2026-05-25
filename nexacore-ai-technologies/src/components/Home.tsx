@@ -1,1112 +1,728 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useRef } from 'react';
+import { motion, useInView } from 'motion/react';
 import { 
-  Cpu, 
-  Database, 
-  Workflow, 
-  ShieldCheck, 
-  Zap, 
-  TrendingUp, 
-  Globe, 
-  Compass, 
   ArrowRight, 
-  Play, 
-  CheckCircle2, 
-  Activity, 
-  RefreshCw,
-  Search,
+  ArrowUpRight,
+  Shield,
+  Zap,
   Lock,
-  UserCheck,
+  Database,
+  Workflow,
+  Globe,
+  Send,
+  Mail,
+  Phone,
   MapPin,
+  Cpu,
+  Network,
+  Layers,
+  Brain,
+  Code,
+  Activity,
   Server,
-  ArrowUpRight
+  ShieldCheck,
+  Hexagon,
+  Fingerprint,
+  Bot,
+  Target
 } from 'lucide-react';
 
 interface HomeProps {
   setActivePage: (page: string) => void;
 }
 
+/* Scroll-triggered reveal */
+function Reveal({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number; key?: any }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-60px' });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+      transition={{ duration: 0.7, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 export default function Home({ setActivePage }: HomeProps) {
-  const [activeSection, setActiveSection] = useState(0);
+  const [formData, setFormData] = useState({ name: '', email: '', company: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [hubMousePos, setHubMousePos] = useState({ x: 0, y: 0 });
 
-  // Section titles representing the 8 Cinematic Chapters (Pillars of Nexacore)
-  const sections = [
-    { id: 'nucleus', title: 'The Nucleus', desc: 'Sovereign Core System' },
-    { id: 'matrix', title: 'Cognitive Matrix', desc: 'Interactive Neural Path' },
-    { id: 'rag-vault', title: 'Enterprise RAG DB', desc: 'Extreme Vector Engine' },
-    { id: 'agent-swarm', title: 'Synth Agents', desc: 'Autonomous Multi-Swarm' },
-    { id: 'defender', title: 'Cybernet Defender', desc: 'Quantum Shield Protocol' },
-    { id: 'roi', title: 'Value Accelerator', desc: 'Interactive ROI Engine' },
-    { id: 'mesh', title: 'Mesh Topology', desc: 'Bengaluru Global Grid' },
-    { id: 'roadmap', title: 'AGI Horizon', desc: 'The Sovereign Era' },
-  ];
-
-  // Helper to scroll to section element
-  const scrollToSection = (index: number) => {
-    setActiveSection(index);
-    const element = document.getElementById(`home-sec-${index}`);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  const handleHubMouseMove = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setHubMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
   };
 
-  // Tracking scroll to update current dot indicator
-  useEffect(() => {
-    const handleScroll = () => {
-      const parent = document.getElementById('scroller-container');
-      if (!parent) return;
-      const scrollPosition = parent.scrollTop;
-      const viewportHeight = parent.clientHeight;
-      const index = Math.round(scrollPosition / viewportHeight);
-      if (index >= 0 && index < sections.length) {
-        setActiveSection(index);
-      }
-    };
-
-    const container = document.getElementById('scroller-container');
-    if (container) {
-      container.addEventListener('scroll', handleScroll, { passive: true });
-    }
-    return () => {
-      if (container) {
-        container.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, []);
-
-  /* --- Interactive States for Section 2: Cognitive Matrix --- */
-  const [pulsingNodes, setPulsingNodes] = useState<number[]>([1, 4, 7]);
-  const [matrixLog, setMatrixLog] = useState<string>('Matrix online. Awaiting system pulse input...');
-  const triggerMatrixPulse = () => {
-    const randomNodes = Array.from({ length: 4 }, () => Math.floor(Math.random() * 12));
-    setPulsingNodes(randomNodes);
-    const optimizations = [
-      'Token processing throughput boosted: +32%',
-      'Active vector pipeline cache refreshed in 2.1ms',
-      'Cognitive neural loop locked (Model Temperature: 0.12)',
-      'Marathahalli HQ secondary cluster synchronized successfully',
-    ];
-    setMatrixLog(optimizations[Math.floor(Math.random() * optimizations.length)]);
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  /* --- Interactive States for Section 3: Neural Memory Vault (RAG) --- */
-  const [ragQuery, setRagQuery] = useState('');
-  const [isQueryingRAG, setIsQueryingRAG] = useState(false);
-  const [ragResult, setRagResult] = useState<any>(null);
-  const runRAGSearch = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!ragQuery.trim()) return;
-    setIsQueryingRAG(true);
-    setTimeout(() => {
-      setIsQueryingRAG(false);
-      setRagResult({
-        chunkId: `VEC-FX-${Math.floor(Math.random() * 9000 + 1000)}`,
-        score: (0.91 + Math.random() * 0.08).toFixed(4),
-        latency: '4.82ms',
-        summary: `Match found regarding '${ragQuery}'. The sovereign enterprise layer has validated this against local database chunk arrays within Bengaluru Marathahalli secure storage nodes. Response contextualized correctly with 0% token hallucination risk.`,
-      });
-    }, 1200);
+    if (!formData.name || !formData.email || !formData.message) return;
+    setIsSubmitting(true);
+    setTimeout(() => { setIsSubmitting(false); setIsSubmitted(true); setFormData({ name: '', email: '', company: '', message: '' }); }, 1500);
   };
 
-  /* --- Interactive States for Section 4: Synth Agent Swarm --- */
-  const [agentSwarmRoutine, setAgentSwarmRoutine] = useState<'harvest' | 'codesync' | 'defender'>('harvest');
-  const [agentLogs, setAgentLogs] = useState<string[]>([
-    'System: Swarm initialization phase authenticated.',
-    'Agent_001: Operational buffer online.',
-  ]);
-  const handleAgentRoutineChange = (type: 'harvest' | 'codesync' | 'defender') => {
-    setAgentSwarmRoutine(type);
-    let newLogs: string[] = [];
-    if (type === 'harvest') {
-      newLogs = [
-        'Routine Alpha triggered: Global Enterprise Document Scrape',
-        'Agent_Hustler_01: Ingress initialized for 4,800 records/sec',
-        'Agent_Hustler_02: Vector transformation pipelines online',
-        'Verification: No anomalies detected in data buffer.',
-      ];
-    } else if (type === 'codesync') {
-      newLogs = [
-        'Routine Beta triggered: Autogenous Code Quality Audit',
-        'Agent_Synthesizer_01: Core framework diagnostic verified',
-        'Agent_Synthesizer_02: TypeScript types structural compliance validated (0 errors)',
-        'Status: Automatic Hot Patch applied securely.',
-      ];
-    } else {
-      newLogs = [
-        'Routine Gamma triggered: Threat Mitigation Protocols Active',
-        'Agent_Sentinel_01: Marathahalli server rack load audited',
-        'Agent_Sentinel_02: Threat anomaly vectors blocked on port 3000',
-        'Security Status: Extreme system vaulting intact.',
-      ];
-    }
-    setAgentLogs(newLogs);
-  };
-
-  /* --- Interactive States for Section 5: Quantum Shield Defender --- */
-  const [shieldActive, setShieldActive] = useState({
-    ragVerify: true,
-    anonymizer: true,
-    piiCore: false,
-    rateLimiter: true
-  });
-  const toggleShield = (key: keyof typeof shieldActive) => {
-    setShieldActive(prev => ({ ...prev, [key]: !prev[key] }));
-  };
-  const getSystemVulnerability = () => {
-    let base = 95;
-    if (shieldActive.ragVerify) base -= 25;
-    if (shieldActive.anonymizer) base -= 30;
-    if (shieldActive.piiCore) base -= 25;
-    if (shieldActive.rateLimiter) base -= 13;
-    return Math.max(1.2, base).toFixed(1);
-  };
-
-  /* --- Interactive States for Section 6: ROI & Acceleration Engine --- */
-  const [queries, setQueries] = useState(50000); // Daily requests
-  const [modelType, setModelType] = useState<'standard' | 'nexacore_rag' | 'nexacore_swarm'>('nexacore_rag');
-  const [automationFactor, setAutomationFactor] = useState(65); // percentage
-
-  const calculateROI = () => {
-    const tokenMultiplier = modelType === 'standard' ? 1.0 : modelType === 'nexacore_rag' ? 8.4 : 15.6;
-    const tokensProcessed = (queries * 1280 * tokenMultiplier).toLocaleString();
-    const developerHoursSaved = Math.round(queries * 0.04 * (automationFactor / 100));
-    
-    // Cost savings estimation: standard cost $0.0015/query vs Nexacore localized model $0.0001/query
-    const savings = Math.round(queries * 0.0014 * (automationFactor / 100) * 30);
-    
-    return {
-      tokens: tokensProcessed,
-      hours: developerHoursSaved,
-      cost: savings,
-    };
-  };
-  const roiValue = calculateROI();
-
-  /* --- Interactive States for Section 7: Bengaluru HQ Global Anchor --- */
-  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
-  const globalNodes = [
-    { city: 'Bengaluru (Sovereign HQ)', coords: '12.9562° N, 77.7025° E', load: 'Optimized 100%', ip: '10.52.0.1' },
-    { city: 'Silicon Valley Node', coords: '37.7749° N, 122.4194° W', load: 'Synchronized 98.4%', ip: '10.52.1.20' },
-    { city: 'Frankfurt Cluster', coords: '50.1109° N, 8.6821° E', load: 'Synchronized 99.1%', ip: '10.52.2.40' },
-    { city: 'Tokyo Edge Core', coords: '35.6762° N, 139.6503° E', load: 'Synchronized 97.9%', ip: '10.52.3.60' },
-  ];
-
-  /* --- Interactive States for Section 8: Roadmap --- */
-  const [selectedPhase, setSelectedPhase] = useState(0);
-  const roadmapData = [
-    {
-      phase: 'Phase 01',
-      title: 'Adaptive Agent Mesh',
-      timeline: 'Q3 2026',
-      details: 'Deploying self-repairing agent clusters across local private networks. Ground Zero focus: Marathahalli advanced infrastructure.'
-    },
-    {
-      phase: 'Phase 02',
-      title: 'Decoupled Vector Streaming',
-      timeline: 'Q1 2027',
-      details: 'Zero-latency vector dataset synchronization bypassing traditional memory backplanes. Accelerated embedding indexing via custom GPUs.'
-    },
-    {
-      phase: 'Phase 03',
-      title: 'Sovereign Llama Finetunes',
-      timeline: 'Q4 2027',
-      details: 'High-speed local corporate models customized for specific Indian business logic, optimized for sub-10ms prompt compilation latencies.'
-    },
-    {
-      phase: 'Phase 04',
-      title: 'Full Autonomous Enterprise',
-      timeline: 'Q2 2028',
-      details: 'Self-regulating business ops pipelines that allocate digital system capital dynamically based on actual ROI feedback loops.'
-    },
-  ];
+  // @ts-ignore
+  const base = (import.meta as any).env?.BASE_URL || '/Nexacore/';
 
   return (
-    <div className="relative min-h-screen bg-brand-dark overflow-hidden flex">
-      {/* HUD-style Fixed Bullet Navigation */}
-      <div className="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-6 items-end">
-        <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-neutral-500 mr-2">
-          System Module: {activeSection + 1}/8
-        </span>
-        <div className="flex flex-col gap-3.5">
-          {sections.map((sec, idx) => (
-            <button
-              id={`sec-dot-btn-${idx}`}
-              key={sec.id}
-              onClick={() => scrollToSection(idx)}
-              className="group flex items-center gap-3 relative focus:outline-none cursor-pointer"
-            >
-              {/* Tooltip description */}
-              <span className="opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 font-display text-[10px] tracking-widest font-semibold uppercase bg-neutral-900/90 text-brand-blue-bright light:text-brand-blue border border-brand-blue-bright/30 px-2.5 py-1 rounded-sm shadow-[0_0_15px_rgba(37,99,235,0.2)]">
-                {sec.title}
-              </span>
-              {/* Bullet circle */}
-              <div className="relative w-5 h-5 flex items-center justify-center">
-                {activeSection === idx && (
-                  <motion.div
-                    layoutId="current-dot-outline"
-                    className="absolute inset-0 rounded-full border border-brand-blue-bright"
-                    transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-                  />
-                )}
-                <div 
-                  className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                    activeSection === idx ? 'bg-brand-blue-bright animate-pulse' : 'bg-neutral-700 group-hover:bg-brand-blue-bright/60'
-                  }`}
-                />
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
+    <div className="bg-[#030712] min-h-screen">
+      
+      {/* ═══════════════════════════════════════════
+          SECTION 1: HERO
+          ═══════════════════════════════════════════ */}
+      <section className="relative overflow-hidden pt-10">
+        {/* Background grid + glow */}
+        <div className="absolute inset-0 cyber-grid opacity-25 pointer-events-none" />
+        <div className="absolute top-[10%] left-[5%] w-[700px] h-[700px] rounded-full bg-[#2563EB]/[0.04] blur-[180px] pointer-events-none" />
+        <div className="absolute bottom-0 right-[10%] w-[500px] h-[500px] rounded-full bg-[#2563EB]/[0.03] blur-[140px] pointer-events-none" />
 
-      {/* Main Multi-Screen Snapped Scroll Container */}
-      <div 
-        id="scroller-container"
-        className="w-full h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth"
-      >
-        {/* ================= SECTION 01: HERO CORE SYSTEM ================= */}
-        <div 
-          id="home-sec-0" 
-          className="snap-start relative w-full h-screen shrink-0 flex items-center justify-center overflow-hidden"
-        >
-          {/* Futuristic Visual Elements */}
-          <div className="absolute inset-0 cyber-grid opacity-35" />
-          <div className="absolute top-[20%] left-[10%] w-[500px] h-[500px] rounded-full bg-brand-blue-bright/5 blur-[120px] pointer-events-none" />
-          
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10 w-full pt-16">
-            {/* Written Intel */}
-            <div className="lg:col-span-7 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-neutral-900 light:bg-neutral-100 border border-brand-blue-bright/20 animate-pulse">
-                <span className="w-2 h-2 rounded-full bg-brand-blue-bright" />
-                <span className="font-mono text-[10px] tracking-[0.2em] text-neutral-300 light:text-neutral-700 uppercase">
-                  Agent hustler architecture certified
-                </span>
-              </div>
-              
-              <h1 className="font-display text-4xl sm:text-6xl font-bold text-white light:text-brand-dark tracking-tight leading-tight">
-                Architecting the <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue-bright to-cyan-400">Autonomous Enterprise</span>
-              </h1>
-              
-              <p className="text-neutral-400 light:text-neutral-600 text-lg sm:text-xl font-normal max-w-xl">
-                Nexacore AI Technologies pioneers high-performance custom neural models, secure localized vector banks, and multi-agent corporate intelligence systems from Bengaluru.
-              </p>
+        <div className="relative z-10 max-w-[1536px] mx-auto px-8 lg:px-12 pt-24 pb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center ">
+            {/* Left: Text content */}
+            <div className="lg:col-span-6 space-y-7">
+              <motion.p
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.5 }}
+                className="font-mono text-[14px] tracking-[0.25em] text-[#3B82F6] uppercase"
+              >
+                AI-POWERED. FUTURE-READY.
+              </motion.p>
 
-              {/* Action Array */}
-              <div className="flex flex-wrap gap-4 pt-4">
+              <motion.h1
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.7 }}
+                className="font-display text-[4rem] lg:text-[4.75rem] font-bold text-white leading-[1.08] tracking-tight"
+              >
+                Architecting the<br />
+                <span className="bg-gradient-to-r from-[#3B82F6] to-[#06B6D4] bg-clip-text text-transparent">Autonomous</span><br />
+                <span className="bg-gradient-to-r from-[#3B82F6] to-[#06B6D4] bg-clip-text text-transparent">Enterprise</span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35, duration: 0.6 }}
+                className="text-[#94A3B8] text-[19px] leading-[1.7] max-w-[440px]"
+              >
+                Nexacore AI Technologies builds intelligent systems
+                that think, learn, and evolve. We empower enterprises
+                with secure data, generative intelligence, and
+                autonomous multi-agent orchestration.
+              </motion.p>
+
+              {/* CTA buttons */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45, duration: 0.5 }}
+                className="flex items-center gap-4 pt-1"
+              >
                 <button
-                  id="hero-services-route-btn"
+                  id="hero-explore-btn"
                   onClick={() => setActivePage('services')}
-                  className="px-8 py-4 bg-brand-blue-bright text-white font-mono text-xs font-bold uppercase tracking-wider rounded-lg shadow-[0_4px_30px_rgba(37,99,235,0.35)] hover:scale-105 hover:bg-blue-600 transition-all duration-300 flex items-center gap-2 group cursor-pointer"
+                  className="group flex items-center gap-2.5 px-7 py-3 bg-[#2563EB] text-white text-sm font-medium rounded-full shadow-[0_4px_24px_rgba(37,99,235,0.35)] hover:shadow-[0_6px_32px_rgba(37,99,235,0.5)] hover:bg-[#3B82F6] transition-all duration-300 cursor-pointer"
                 >
-                  Inspect Infrastructure
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  Explore Our System
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </button>
                 <button
-                  id="hero-contact-route-btn"
+                  id="hero-consult-btn"
                   onClick={() => setActivePage('contact')}
-                  className="px-8 py-4 bg-neutral-900/80 light:bg-neutral-100 text-white light:text-brand-dark font-mono text-xs font-bold uppercase tracking-wider rounded-lg border border-neutral-800 light:border-neutral-200 hover:border-brand-blue-bright light:hover:border-brand-blue-bright transition-all duration-300 hover:bg-neutral-900/60 cursor-pointer"
+                  className="px-7 py-3 text-white text-sm font-medium rounded-full border border-[#1E293B] hover:border-[#3B82F6]/40 bg-[#0F172A]/60 transition-all duration-300 cursor-pointer"
                 >
-                  Establish Comms
+                  Consult Expert
                 </button>
-              </div>
-
-              {/* Real-time Telemetry Metadata */}
-              <div className="pt-8 border-t border-neutral-800/40 light:border-neutral-200/40 flex items-center gap-10 font-mono text-xs text-neutral-500">
-                <div>
-                  <span className="block text-neutral-400 font-bold uppercase text-[10px] tracking-wider mb-1">HQ Anchor</span>
-                  <span className="text-white light:text-brand-dark">Marathahalli, IN</span>
-                </div>
-                <div>
-                  <span className="block text-neutral-400 font-bold uppercase text-[10px] tracking-wider mb-1">Node Latency</span>
-                  <span className="text-brand-blue-bright font-bold font-mono">4.18ms</span>
-                </div>
-                <div>
-                  <span className="block text-neutral-400 font-bold uppercase text-[10px] tracking-wider mb-1">Integrations</span>
-                  <span className="text-white light:text-brand-dark">Private RAG & Swarms</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Central 3D-Like Kinetic Hologram */}
-            <div className="lg:col-span-5 flex justify-center items-center relative aspect-square max-w-[400px] lg:max-w-none mx-auto">
-              <div className="absolute w-[280px] h-[280px] md:w-[350px] md:h-[350px] rounded-full border border-brand-blue-bright/10 animate-pulse" />
-              <div className="absolute w-[220px] h-[220px] md:w-[280px] md:h-[280px] rounded-full border border-dashed border-neutral-800 light:border-neutral-200" />
-              
-              {/* Dynamic spinning core circles representing a neuro-sphere */}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 25, ease: 'linear' }}
-                className="absolute w-[180px] h-[180px] md:w-[240px] md:h-[240px] flex items-center justify-center"
-              >
-                <svg className="w-full h-full text-brand-blue-bright" viewBox="0 0 100 100">
-                  <ellipse cx="50" cy="50" rx="48" ry="12" fill="none" stroke="currentColor" strokeWidth="1" className="opacity-40" />
-                  <ellipse cx="50" cy="50" rx="12" ry="48" fill="none" stroke="currentColor" strokeWidth="1" className="opacity-40" />
-                  <ellipse cx="50" cy="50" rx="35" ry="35" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="5,15" />
-                </svg>
               </motion.div>
 
+              {/* Feature pills with dividers */}
               <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ repeat: Infinity, duration: 15, ease: 'linear' }}
-                className="absolute w-[130px] h-[130px] md:w-[170px] md:h-[170px]"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.5 }}
+                className="flex items-stretch gap-0 pt-6 border-t border-[#1E293B]/60 mt-2"
               >
-                <svg className="w-full h-full text-white light:text-brand-dark" viewBox="0 0 100 100">
-                  <ellipse cx="50" cy="50" rx="46" ry="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="10, 5" />
-                  <ellipse cx="50" cy="50" rx="16" ry="46" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="10, 5" />
-                </svg>
-              </motion.div>
-
-              {/* Core holographic orb */}
-              <div className="absolute w-24 h-24 md:w-32 md:h-32 bg-gradient-to-tr from-brand-blue-bright to-cyan-400 rounded-full flex items-center justify-center p-[2px] shadow-[0_0_60px_rgba(37,99,235,0.5)]">
-                <div className="w-full h-full bg-brand-dark rounded-full flex flex-col items-center justify-center p-3 text-center overflow-hidden">
-                  <Cpu className="w-6 h-6 md:w-8 md:h-8 text-brand-blue-bright animate-bounce" />
-                  <span className="font-mono text-[8px] md:text-[10px] uppercase font-bold text-neutral-300 mt-1">CORE 01</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ================= SECTION 02: COGNITIVE DECISION MATRIX ================= */}
-        <div 
-          id="home-sec-1" 
-          className="snap-start relative w-full h-screen shrink-0 flex items-center justify-center overflow-hidden bg-brand-darker"
-        >
-          <div className="absolute inset-0 cyber-grid opacity-20" />
-          <div className="absolute top-[30%] right-[10%] w-[350px] h-[350px] rounded-full bg-brand-blue-bright/5 blur-[100px] pointer-events-none" />
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10 w-full pt-16">
-            <div className="lg:col-span-5 text-left space-y-5">
-              <div className="font-mono text-xs uppercase tracking-widest text-brand-blue-bright light:text-brand-blue font-bold flex items-center gap-2">
-                <Workflow className="w-4 h-4" />
-                02 / Cognitive Matrix
-              </div>
-              
-              <h2 className="font-display text-3xl sm:text-5xl font-bold text-white light:text-brand-dark tracking-tight">
-                Self-Regulating Neuro Node Paths
-              </h2>
-              
-              <p className="text-neutral-400 light:text-neutral-600 font-sans text-sm sm:text-base leading-relaxed">
-                Rather than linear computations, our neural networks evaluate systems across multi-dimensional matrices. Use the cognitive optimization trigger to simulate real-time model inference tuning.
-              </p>
-
-              {/* Interactive Module Controls */}
-              <div className="bg-neutral-900/80 border border-neutral-800/80 p-5 rounded-xl space-y-4 shadow-xl">
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs uppercase text-neutral-300 tracking-wider">Simulated Path Pulse</span>
-                  <button 
-                    id="matrix-pulse-trigger"
-                    onClick={triggerMatrixPulse}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-blue-bright text-white font-mono text-[10px] font-bold uppercase rounded hover:bg-blue-600 transition-colors cursor-pointer"
-                  >
-                    <Activity className="w-3.5 h-3.5" />
-                    Trigger System Pulse
-                  </button>
-                </div>
-                
-                <div className="bg-brand-dark/90 p-3.5 rounded border border-neutral-950 font-mono text-xs text-neutral-400">
-                  <span className="text-brand-blue-bright font-bold">&gt; </span>
-                  {matrixLog}
-                </div>
-              </div>
-            </div>
-
-            {/* Neural Matrix Interactive Board */}
-            <div className="lg:col-span-7 flex justify-center items-center">
-              <div className="w-full max-w-[500px] bg-neutral-900/40 border border-neutral-800 p-8 rounded-2xl relative shadow-2xl overflow-hidden aspect-video">
-                <div className="absolute top-0 right-0 p-3 font-mono text-[9px] text-neutral-500 uppercase tracking-wider flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                  Live Sync Status
-                </div>
-                
-                {/* Node Grid representation */}
-                <div className="grid grid-cols-4 gap-6 h-full items-center">
-                  {[...Array(12)].map((_, i) => {
-                    const isPulsing = pulsingNodes.includes(i);
-                    return (
-                      <div key={i} className="flex flex-col items-center justify-center relative">
-                        <motion.div
-                          animate={isPulsing ? {
-                            scale: [1, 1.3, 1],
-                            borderColor: ['#3B82F6', '#60A5FA', '#3B82F6'],
-                            boxShadow: ['0 0 0px rgba(0,0,0,0)', '0 0 15px rgba(59,130,246,0.5)', '0 0 0px rgba(0,0,0,0)']
-                          } : {}}
-                          transition={{ duration: 1.5 }}
-                          className={`w-12 h-12 rounded-xl flex items-center justify-center border-2 transition-all ${
-                            isPulsing 
-                              ? 'border-brand-blue-bright bg-brand-blue-bright/10' 
-                              : 'border-neutral-800 bg-brand-dark hover:border-neutral-700'
-                          }`}
-                        >
-                          <Cpu className={`w-5 h-5 ${isPulsing ? 'text-brand-blue-bright' : 'text-neutral-600'}`} />
-                        </motion.div>
-                        <span className="font-mono text-[9px] uppercase tracking-wider text-neutral-500 mt-2">
-                          N-{i < 10 ? '0' + i : i}
-                        </span>
-                        
-                        {/* Connecting Lines Representation using absolute positioning */}
-                        {isPulsing && i % 3 === 0 && (
-                          <span className="absolute w-24 h-[2px] bg-brand-blue-bright top-1/2 left-10 scanner-line z-0" />
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ================= SECTION 03: NEURAL MEMORY VAULT (RAG) ================= */}
-        <div 
-          id="home-sec-2" 
-          className="snap-start relative w-full h-screen shrink-0 flex items-center justify-center overflow-hidden bg-brand-dark"
-        >
-          <div className="absolute inset-0 cyber-grid opacity-30" />
-          <div className="absolute bottom-[20%] left-[10%] w-[400px] h-[400px] rounded-full bg-brand-blue-bright/5 blur-[120px] pointer-events-none" />
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10 w-full pt-16">
-            {/* Left Interactive RAG Shell */}
-            <div className="lg:col-span-7 flex justify-center items-center order-2 lg:order-1">
-              <div className="w-full max-w-[550px] bg-neutral-900/90 border border-neutral-800 p-6 rounded-xl shadow-2xl font-mono text-xs">
-                <div className="flex items-center justify-between pb-4 border-b border-neutral-800 mb-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                    <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                    <span className="text-neutral-400 font-bold ml-2 uppercase text-[10px]">VAULT_RAG_SHELL_v2.0</span>
-                  </div>
-                  <Database className="w-4 h-4 text-brand-blue-bright light:text-brand-blue" />
-                </div>
-
-                <form onSubmit={runRAGSearch} className="space-y-4">
-                  <div className="flex items-center gap-2 bg-brand-dark/90 p-2 border border-neutral-800/80 rounded-lg">
-                    <Search className="w-4 h-4 text-neutral-500 shrink-0" />
-                    <input
-                      id="rag-query-input"
-                      type="text"
-                      className="bg-transparent border-none text-white focus:outline-none w-full placeholder-neutral-600 font-mono text-xs"
-                      placeholder="Input semantic lookup query (eg. Corporate policy)..."
-                      value={ragQuery}
-                      onChange={(e) => setRagQuery(e.target.value)}
-                    />
-                    <button
-                      id="rag-submit-btn"
-                      type="submit"
-                      disabled={isQueryingRAG}
-                      className="px-3 py-1.5 bg-brand-blue-bright font-bold text-white uppercase text-[10px] rounded cursor-pointer shrink-0 disabled:opacity-55 hover:bg-blue-600"
-                    >
-                      {isQueryingRAG ? 'Scanning...' : 'RUN QUERY'}
-                    </button>
-                  </div>
-                </form>
-
-                {/* Response area */}
-                <div className="mt-4 p-4 bg-brand-darker rounded border border-neutral-950 min-h-[140px] flex flex-col justify-between">
-                  <AnimatePresence mode="wait">
-                    {isQueryingRAG ? (
-                      <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="flex flex-col items-center justify-center space-y-2 h-[120px]"
-                      >
-                        <RefreshCw className="w-6 h-6 text-brand-blue-bright animate-spin" />
-                        <span className="text-[10px] tracking-widest text-neutral-500 uppercase">Calculating embeddings & similarity cosines...</span>
-                      </motion.div>
-                    ) : ragResult ? (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0 }}
-                        className="space-y-3"
-                      >
-                        <div className="flex flex-wrap items-center justify-between text-[10px] text-neutral-500 uppercase pb-1 border-b border-neutral-900">
-                          <span>Chunk: <strong className="text-neutral-300">{ragResult.chunkId}</strong></span>
-                          <span>Score: <strong className="text-brand-blue-bright light:text-brand-blue">{ragResult.score}</strong></span>
-                          <span>Latency: <strong className="text-emerald-500">{ragResult.latency}</strong></span>
-                        </div>
-                        <p className="text-neutral-300 leading-relaxed font-sans text-xs">
-                          {ragResult.summary}
-                        </p>
-                      </motion.div>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center space-y-1 h-[120px] text-neutral-600">
-                        <Database className="w-8 h-8 text-neutral-800" />
-                        <span className="text-[10px] uppercase font-bold tracking-wider">Awaiting query parameters</span>
-                        <span className="text-[9px] text-neutral-700">Type something in input and hit 'RUN QUERY'</span>
-                      </div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Intellectual Content */}
-            <div className="lg:col-span-5 text-left space-y-5 order-1 lg:order-2">
-              <div className="font-mono text-xs uppercase tracking-widest text-brand-blue-bright light:text-brand-blue font-bold flex items-center gap-2">
-                <Database className="w-4 h-4" />
-                03 / Vector Store & RAG
-              </div>
-              <h2 className="font-display text-3xl sm:text-5xl font-bold text-white light:text-brand-dark tracking-tight leading-tight">
-                Decoupled Knowledge Engines
-              </h2>
-              <p className="text-neutral-400 light:text-neutral-600 text-sm sm:text-base leading-relaxed">
-                Nexacore engineers state-of-the-art retrieval-augmented generation. By bypassing static context boundaries, models query dynamic in-memory databases utilizing top-k cosine logic securely mapped in local Indian data centers.
-              </p>
-              <ul className="space-y-2 text-sm font-mono text-neutral-300">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-brand-blue-bright light:text-brand-blue shrink-0" />
-                  Hallucination Rates reduced below 0.1%
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-brand-blue-bright light:text-brand-blue shrink-0" />
-                  Hybrid dense-sparse lexical indexing
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* ================= SECTION 04: SYNTH INTEGRATED MULTI-AGENT SWARMS ================= */}
-        <div 
-          id="home-sec-3" 
-          className="snap-start relative w-full h-screen shrink-0 flex items-center justify-center overflow-hidden bg-brand-darker"
-        >
-          <div className="absolute inset-0 cyber-grid opacity-25" />
-          <div className="absolute top-[20%] left-[20%] w-[380px] h-[380px] rounded-full bg-brand-blue-bright/5 blur-[120px] pointer-events-none" />
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10 w-full pt-16">
-            <div className="lg:col-span-5 text-left space-y-5">
-              <div className="font-mono text-xs uppercase tracking-widest text-brand-blue-bright light:text-brand-blue font-bold flex items-center gap-2">
-                <Workflow className="w-4 h-4" />
-                04 / Autonomous Agent Swarms
-              </div>
-              <h2 className="font-display text-3xl sm:text-5xl font-bold text-white light:text-brand-dark tracking-tight">
-                Collaborative Multi-Agent Systems
-              </h2>
-              <p className="text-neutral-400 light:text-neutral-600 text-sm sm:text-base leading-relaxed">
-                Rather than individual monolithic models, Nexacore deploys structured, role-specific agents that synchronize tasks to automate business, software development, or cyber security routines with extreme speed.
-              </p>
-
-              {/* Selector buttons */}
-              <div className="flex flex-wrap gap-2.5">
                 {[
-                  { id: 'harvest', label: 'Data Scraper Cluster' },
-                  { id: 'codesync', label: 'TS Code Integrity Audits' },
-                  { id: 'defender', label: 'Cyber Threat Blockers' },
-                ].map((btn) => (
-                  <button
-                    id={`agent-routine-btn-${btn.id}`}
-                    key={btn.id}
-                    onClick={() => handleAgentRoutineChange(btn.id as any)}
-                    className={`px-3 py-2 text-xs font-mono font-bold rounded-lg border transition-all cursor-pointer ${
-                      agentSwarmRoutine === btn.id 
-                        ? 'bg-brand-blue-bright border-brand-blue-bright text-white shadow-md' 
-                        : 'border-neutral-800 bg-neutral-900/60 text-neutral-400 hover:text-white'
-                    }`}
-                  >
-                    {btn.label}
-                  </button>
+                  { top: 'Multi-Agent', bot: 'Orchestration' },
+                  { top: 'Secure', bot: 'AI Infrastructure' },
+                  { top: 'Scalable', bot: 'Enterprise AI' },
+                  { top: 'Future-Ready', bot: 'Intelligence' },
+                ].map((p, i) => (
+                  <div key={i} className={`flex-1 py-2 ${i > 0 ? 'border-l border-[#1E293B]/50 pl-5' : ''} ${i < 3 ? 'pr-5' : ''}`}>
+                    <span className="block text-[15px] font-semibold text-white leading-snug">{p.top}</span>
+                    <span className="block text-[14px] text-[#94A3B8] mt-0.5">{p.bot}</span>
+                  </div>
                 ))}
-              </div>
+              </motion.div>
             </div>
 
-            {/* Simulated Swarm visual representation */}
-            <div className="lg:col-span-7 flex justify-center items-center">
-              <div className="w-full max-w-[500px] bg-neutral-100 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 p-6 rounded-2xl relative shadow-2xl aspect-video overflow-hidden flex flex-col justify-between">
-                <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-neutral-800 font-mono text-[10px] text-neutral-400 dark:text-neutral-500 uppercase">
-                  <span>SWARM PROTOCOL: {agentSwarmRoutine.toUpperCase()}</span>
-                  <span>Active Workers: 4 nodes</span>
-                </div>
+            {/* Right: AI Orb */}
+            <motion.div
+              className="lg:col-span-6 flex justify-center items-center"
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="relative w-full max-w-[660px] flex items-center justify-center">
+                {/* Cinematic Ambient Glow Behind Video */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-[#3B82F6]/20 blur-[100px] rounded-full pointer-events-none" />
 
-                {/* Kinetic orbits */}
-                <div className="flex-1 relative flex items-center justify-center my-4 overflow-hidden h-36">
-                  {/* Central Objective Anchor */}
-                  <div className="w-12 h-12 bg-neutral-800 rounded-full border border-brand-blue-bright/40 flex items-center justify-center text-brand-blue-bright z-10 relative">
-                    <Cpu className="w-5 h-5 animate-spin duration-3000" />
-                  </div>
-
-                  {/* Radiating wave */}
-                  <div className="absolute w-24 h-24 border border-brand-blue-bright/20 rounded-full animate-ping" />
-
-                  {/* Orbits & Agent positions */}
-                  <div className="absolute w-[80%] h-[80%] border border-dashed border-neutral-800 rounded-full" />
-
-                  {/* Swarm particles positions adjusted by state */}
-                  <AnimatePresence mode="wait">
-                    {agentSwarmRoutine === 'harvest' && (
-                      <motion.div 
-                        initial={{ opacity: 0, rotate: 0 }}
-                        animate={{ opacity: 1, rotate: 360 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ repeat: Infinity, duration: 8, ease: 'linear' }}
-                        className="absolute inset-0 flex items-center justify-between"
-                      >
-                        <div className="w-4 h-4 bg-brand-blue-bright rounded-full border border-white neon-glow shadow-blue-500" />
-                        <div className="w-3 h-3 bg-brand-blue-bright rounded-full" />
-                      </motion.div>
-                    )}
-                    {agentSwarmRoutine === 'codesync' && (
-                      <motion.div 
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="absolute inset-0 flex flex-col justify-around py-4 items-center"
-                      >
-                        <div className="w-5 h-5 bg-emerald-500 text-white font-mono text-[8px] font-bold rounded-lg flex items-center justify-center">TS</div>
-                        <div className="w-5 h-5 bg-emerald-500 text-white font-mono text-[8px] font-bold rounded-lg flex items-center justify-center">TS</div>
-                      </motion.div>
-                    )}
-                    {agentSwarmRoutine === 'defender' && (
-                      <motion.div 
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0 }}
-                        className="absolute inset-0 flex justify-center items-center gap-12"
-                      >
-                        <div className="w-6 h-6 border-2 border-dashed border-red-500 rounded-full animate-spin" />
-                        <div className="w-4 h-4 bg-red-500 rounded" />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Swarm Live Diagnostic Panel */}
-                <div className="bg-neutral-950 p-4 rounded border border-neutral-900 font-mono text-[10px] space-y-1">
-                  {agentLogs.map((log, idx) => (
-                    <div key={idx} className="text-neutral-400">
-                      <span className="text-brand-blue-bright font-bold">&gt;&gt;</span> {log}
-                    </div>
-                  ))}
-                </div>
+                <video
+                  className="relative z-10 w-full h-auto drop-shadow-2xl scale-[1.2]"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  style={{ filter: 'contrast(1.1)', transform: 'translateZ(0)', willChange: 'transform' }}
+                >
+                  <source src={`${base}assets/videos/crpnex_transparent.webm`} type="video/webm" />
+                </video>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
+      </section>
 
-        {/* ================= SECTION 05: QUANTUM DEFENDER SHIELD ================= */}
-        <div 
-          id="home-sec-4" 
-          className="snap-start relative w-full h-screen shrink-0 flex items-center justify-center overflow-hidden bg-brand-dark"
-        >
-          <div className="absolute inset-0 cyber-grid opacity-30" />
-          <div className="absolute bottom-[10%] right-[10%] w-[450px] h-[450px] rounded-full bg-brand-blue-bright/5 blur-[120px] pointer-events-none" />
+      {/* ═══════════════════════════════════════════
+          SECTION 2: TRUSTED COMPANIES
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-8">
+        <div className="max-w-[1536px] mx-auto px-8 lg:px-12">
+          <Reveal>
+            {/* Top divider */}
+            <div className="h-px bg-gradient-to-r from-transparent via-[#1E293B] to-transparent mb-8" />
+            
+            <p className="text-center font-mono text-[14px] font-medium tracking-[0.2em] text-[#94A3B8] uppercase mb-8">
+              Trusted by forward-thinking enterprises
+            </p>
 
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10 w-full pt-16">
-            {/* Left Interactive HUD Shield Panel */}
-            <div className="lg:col-span-7 flex justify-center items-center order-2 lg:order-1">
-              <div className="w-full max-w-[500px] bg-neutral-900/90 border border-neutral-800 p-6 rounded-2xl relative shadow-2xl">
-                <div className="absolute top-4 right-4 text-right flex flex-col">
-                  <span className="font-mono text-[9px] text-neutral-500 uppercase">Risk Index</span>
-                  <span className={`font-mono text-xl font-bold ${parseFloat(getSystemVulnerability()) > 40 ? 'text-brand-blue-bright light:text-brand-blue mr-1 animate-pulse' : 'text-emerald-400'}`}>
-                    {getSystemVulnerability()}%
-                  </span>
+            <div className="flex items-center justify-center gap-14 flex-wrap">
+              {[
+                { name: 'AVENBANK', prefix: '△', sub: 'BANKING' },
+                { name: 'Finova', prefix: '◇', sub: 'FINANCE' },
+                { name: 'MediCore', prefix: '+', sub: 'HEALTHCARE' },
+                { name: 'ShopX', prefix: '◉', sub: 'RETAIL' },
+                { name: 'PayNex', prefix: '▽', sub: 'PAYMENTS' },
+              ].map((logo, i) => (
+                <div key={i} className="flex items-center gap-2.5 opacity-50 hover:opacity-80 transition-opacity duration-300 select-none">
+                  <span className="text-white text-lg font-light">{logo.prefix}</span>
+                  <div>
+                    <span className="font-display text-[18px] font-bold text-white tracking-wide">{logo.name}</span>
+                    <span className="block text-[11px] text-[#94A3B8] tracking-[0.15em] uppercase">{logo.sub}</span>
+                  </div>
                 </div>
-                
-                <div className="flex items-center gap-2 pb-4 mb-6 border-b border-neutral-800">
-                  <ShieldCheck className="w-5 h-5 text-brand-blue-bright light:text-brand-blue" />
-                  <span className="font-display font-medium text-sm text-white uppercase tracking-wider">Quantum Shield Controls</span>
-                </div>
-
-                <div className="space-y-4">
-                  {[
-                    { id: 'ragVerify', title: 'Dense Semantic Validation', desc: 'Queries verified against structured vectors to prevent external hijack injection' },
-                    { id: 'anonymizer', title: 'Metadata Anonymizer Core', desc: 'Scrubs client parameters and IPs at the ingress server boundary' },
-                    { id: 'piiCore', title: 'PII Redaction filter', desc: 'Identifies and standardizes cell numbers, credit, and PAN cards automatically' },
-                    { id: 'rateLimiter', title: 'Dynamic API Flood Shield', desc: 'Throttles high frequency loops using sliding token caches' },
-                  ].map((ctrl) => {
-                    const isActive = (shieldActive as any)[ctrl.id];
-                    return (
-                      <button
-                        id={`shield-toggle-${ctrl.id}`}
-                        key={ctrl.id}
-                        onClick={() => toggleShield(ctrl.id as any)}
-                        className={`w-full text-left p-3.5 rounded-lg border flex items-center justify-between transition-all cursor-pointer ${
-                          isActive 
-                            ? 'bg-brand-blue-bright/5 border-brand-blue-bright/50 text-white' 
-                            : 'bg-neutral-900/40 border-neutral-850 text-neutral-500 hover:border-neutral-800'
-                        }`}
-                      >
-                        <div className="space-y-0.5">
-                          <h4 className={`text-xs font-mono font-bold ${isActive ? 'text-brand-blue-bright light:text-brand-blue' : 'text-neutral-400'}`}>
-                            {ctrl.title}
-                          </h4>
-                          <p className="text-[10px] text-neutral-500 max-w-[340px] leading-relaxed">
-                            {ctrl.desc}
-                          </p>
-                        </div>
-                        <div className={`w-8 h-4 rounded-full p-0.5 transition-colors ${isActive ? 'bg-brand-blue-bright' : 'bg-neutral-800'}`}>
-                          <div className={`w-3 h-3 rounded-full bg-white transition-transform ${isActive ? 'translate-x-4' : 'translate-x-0'}`} />
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+              ))}
             </div>
 
-            {/* Right Intellectual Content */}
-            <div className="lg:col-span-5 text-left space-y-5 order-1 lg:order-2">
-              <div className="font-mono text-xs uppercase tracking-widest text-brand-blue-bright light:text-brand-blue font-bold flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4" />
-                05 / Cybersecurity Guard
-              </div>
-              <h2 className="font-display text-3xl sm:text-5xl font-bold text-white light:text-brand-dark tracking-tight leading-tight">
-                Quantum Armor for Sovereignty
-              </h2>
-              <p className="text-neutral-400 light:text-neutral-600 text-sm sm:text-base leading-relaxed font-sans">
-                Corporate LLM prompts expose massive corporate liabilities. Nexacore intercepts every server packet with dedicated sanitizers. Engage the cryptographic toggles to model the mathematical decline of corporate threat vulnerability.
-              </p>
-              <div className="p-4 rounded-xl bg-neutral-900/50 light:bg-neutral-100 border border-brand-blue-bright/10 font-mono text-xs flex items-center gap-3">
-                <Lock className="w-5 h-5 text-brand-blue-bright light:text-brand-blue" />
-                <span>Encrypted using server-bound HSM with zero key-sharing parameters.</span>
-              </div>
-            </div>
-          </div>
+            {/* Bottom divider */}
+            <div className="h-px bg-gradient-to-r from-transparent via-[#1E293B] to-transparent mt-8" />
+          </Reveal>
         </div>
+      </section>
 
-        {/* ================= SECTION 06: VALUE & ROI ACCELERATOR SIMULATOR ================= */}
-        <div 
-          id="home-sec-5" 
-          className="snap-start relative w-full h-screen shrink-0 flex items-center justify-center overflow-hidden bg-brand-darker"
-        >
-          <div className="absolute inset-0 cyber-grid opacity-20" />
-          <div className="absolute top-[10%] left-[20%] w-[450px] h-[450px] rounded-full bg-brand-blue-bright/5 blur-[120px] pointer-events-none" />
+      {/* ═══════════════════════════════════════════
+          SECTION 3: SERVICES (CORE CAPABILITIES)
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-24">
+        <div className="absolute inset-0 bg-[#030712] pointer-events-none" />
 
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10 w-full pt-16">
-            <div className="lg:col-span-5 text-left space-y-5">
-              <div className="font-mono text-xs uppercase tracking-widest text-brand-blue-bright light:text-brand-blue font-bold flex items-center gap-2">
-                <TrendingUp className="w-4 h-4" />
-                06 / ROI Estimator Engine
+        <div className="relative z-10 max-w-[1536px] mx-auto px-8 lg:px-12">
+          {/* Header */}
+          <Reveal>
+            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-8 mb-16">
+              <div className="max-w-xl">
+                <div className="inline-block border border-[#1E293B] rounded-full px-4 py-1.5 mb-6">
+                  <span className="font-mono text-[13px] tracking-[0.25em] font-bold text-[#3B82F6] uppercase">CORE CAPABILITIES</span>
+                </div>
+                <h2 className="font-display text-[3rem] lg:text-[3.5rem] font-bold text-white leading-[1.1] tracking-tight">
+                  AI Solutions for the<br />Modern Enterprise
+                </h2>
               </div>
-              <h2 className="font-display text-3xl sm:text-5xl font-bold text-white light:text-brand-dark tracking-tight">
-                Quantify the Automation Curve
-              </h2>
-              <p className="text-neutral-400 light:text-neutral-600 text-sm sm:text-base leading-relaxed">
-                Calculate real ROI by projecting query workloads against localized custom models compared to standard cloud-hosted third-party LLMs.
+              <p className="text-[#94A3B8] text-[16px] leading-[1.8] max-w-[360px] lg:mt-12">
+                We deliver end-to-end AI capabilities
+                built on robust data engineering,
+                generative models, and autonomous
+                multi-agent systems.
               </p>
+            </div>
+          </Reveal>
 
-              {/* Sliders Control Deck */}
-              <div className="space-y-4 bg-neutral-900/80 p-5 rounded-xl border border-neutral-800">
-                <div className="space-y-1">
-                  <div className="flex justify-between font-mono text-[10px] text-neutral-400">
-                    <span>DAILY INFERENCE OPERATIONS</span>
-                    <span className="text-brand-blue-bright light:text-brand-blue font-bold">{queries.toLocaleString()} TX</span>
-                  </div>
-                  <input
-                    id="slider-queries-input"
-                    type="range"
-                    min="5000"
-                    max="500000"
-                    step="5000"
-                    className="w-full accent-brand-blue-bright cursor-pointer"
-                    value={queries}
-                    onChange={(e) => setQueries(parseInt(e.target.value))}
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <div className="flex justify-between font-mono text-[10px] text-neutral-400">
-                    <span>AUTOMATION TARGET FACTOR</span>
-                    <span className="text-brand-blue-bright light:text-brand-blue font-bold">{automationFactor}% Efficiency</span>
-                  </div>
-                  <input
-                    id="slider-automation-input"
-                    type="range"
-                    min="10"
-                    max="95"
-                    step="5"
-                    className="w-full accent-brand-blue-bright cursor-pointer"
-                    value={automationFactor}
-                    onChange={(e) => setAutomationFactor(parseInt(e.target.value))}
-                  />
-                </div>
-
-                <div className="grid grid-cols-3 gap-2 pt-2">
-                  {[
-                    { id: 'standard', label: 'Vanilla API' },
-                    { id: 'nexacore_rag', label: 'Nexa RAG' },
-                    { id: 'nexacore_swarm', label: 'Nexa Swarm' },
-                  ].map((m) => (
+          {/* Service Cards - exact horizontal split layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            {[
+              { 
+                num: '01', 
+                title: 'Data Engineering', 
+                desc: 'Build resilient data pipelines, unify enterprise data, and unlock real-time intelligence at scale.', 
+                img: 'service-data-engineering.png',
+                accent: 'text-[#3B82F6]',
+                hoverAccent: 'group-hover:text-[#60A5FA]'
+              },
+              { 
+                num: '02', 
+                title: 'Generative AI', 
+                desc: 'Create, generate, and innovate with secure, enterprise-grade generative AI solutions.', 
+                img: 'service-generative-ai.png',
+                accent: 'text-[#A855F7]', // Purple
+                hoverAccent: 'group-hover:text-[#C084FC]'
+              },
+              { 
+                num: '03', 
+                title: 'Agentic AI', 
+                desc: 'Deploy autonomous multi-agent systems that plan, reason, and execute complex workflows.', 
+                img: 'service-agentic-ai.png',
+                accent: 'text-[#2DD4BF]', // Teal/Cyan
+                hoverAccent: 'group-hover:text-[#5EEAD4]'
+              },
+            ].map((s, i) => (
+              <Reveal key={i} delay={i * 0.12}>
+                <div className="relative bg-[#050B14] border border-[#1E293B]/60 rounded-xl overflow-hidden group hover:border-[#3B82F6]/30 transition-all duration-500 h-[220px] lg:h-[240px] flex">
+                  
+                  {/* Left Content (Text) */}
+                  <div className="relative z-10 w-[55%] p-5 lg:p-6 flex flex-col h-full">
+                    <span className="font-mono text-[14px] text-[#94A3B8] font-medium tracking-wider mb-3 block">{s.num}</span>
+                    <h3 className="font-display text-[20px] font-bold text-white mb-2 tracking-tight">{s.title}</h3>
+                    <p className="text-[#CBD5E1] text-[15px] leading-[1.6] flex-grow pr-2">{s.desc}</p>
                     <button
-                      id={`model-selector-${m.id}`}
-                      key={m.id}
-                      onClick={() => setModelType(m.id as any)}
-                      className={`py-2 text-[10px] font-mono font-bold rounded-md uppercase tracking-wider border cursor-pointer ${
-                        modelType === m.id 
-                          ? 'bg-brand-blue-bright/10 border-brand-blue-bright text-brand-blue-bright' 
-                          : 'border-neutral-800 bg-brand-dark hover:border-neutral-700 text-neutral-500'
-                      }`}
+                      onClick={() => setActivePage('services')}
+                      className={`inline-flex items-center gap-2 ${s.accent} ${s.hoverAccent} text-[15px] font-semibold transition-all cursor-pointer mt-2`}
                     >
-                      {m.label}
+                      Explore <ArrowRight className="w-3.5 h-3.5" />
                     </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Interactive Output Graphic */}
-            <div className="lg:col-span-7 flex justify-center items-center">
-              <div className="w-full max-w-[500px] bg-gradient-to-br from-neutral-900 to-brand-dark border border-neutral-800 p-8 rounded-2xl relative shadow-2xl space-y-6">
-                <div className="absolute top-4 right-4 flex items-center gap-1.5 font-mono text-[8px] text-neutral-500 uppercase">
-                  <span>Sovereign GPU Compute Mode</span>
-                </div>
-
-                <h3 className="font-display font-bold text-sm text-neutral-300 uppercase tracking-widest border-b border-neutral-800 pb-3">Projected Monthly Savings</h3>
-
-                {/* Output metrics cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-900 relative overflow-hidden">
-                    <span className="block font-mono text-[9px] text-neutral-500 uppercase tracking-widest mb-1">Monthly Cost Reduced</span>
-                    <span className="font-display text-2xl sm:text-3xl font-bold text-emerald-400 font-mono tracking-tight">
-                      ${roiValue.cost.toLocaleString()}
-                    </span>
-                    <div className="absolute right-3 bottom-3 text-emerald-500/10">
-                      <TrendingUp className="w-12 h-12" />
-                    </div>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-900 relative overflow-hidden">
-                    <span className="block font-mono text-[9px] text-neutral-500 uppercase tracking-widest mb-1">Engineering Hours Freed</span>
-                    <span className="font-display text-2xl sm:text-3xl font-bold text-brand-blue-bright light:text-brand-blue font-mono tracking-tight">
-                      ~{roiValue.hours.toLocaleString()} hrs
-                    </span>
-                    <div className="absolute right-3 bottom-3 text-brand-blue-bright/10">
-                      <Zap className="w-12 h-12" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Tokens Generated visual simulation mapping */}
-                <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-900">
-                  <div className="flex justify-between font-mono text-[9px] text-neutral-400 mb-2">
-                    <span>ESTIMATED TOKENS STREAMED/MONTH</span>
-                    <span className="text-white font-bold">{roiValue.tokens} TK</span>
-                  </div>
-                  {/* Styled Dynamic Progress Bar */}
-                  <div className="w-full h-3 bg-neutral-900 rounded-full overflow-hidden p-[2px]">
-                    <motion.div
-                      animate={{ width: `${Math.min(100, Math.max(10, (queries / 500000) * 100))}%` }}
-                      transition={{ type: 'spring', damping: 15 }}
-                      className="h-full bg-gradient-to-r from-brand-blue-bright to-cyan-400 rounded-full"
+                  {/* Right Content (Image) */}
+                  <div className="absolute top-0 right-0 bottom-0 w-[60%] flex items-center justify-center overflow-hidden pointer-events-none">
+                    {/* Gradient fade to blend image smoothly into the left text area */}
+                    <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#050B14] to-transparent z-10" />
+                    
+                    <img
+                      src={`${base}images/${s.img}`}
+                      alt={s.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 mix-blend-screen"
+                      style={{ filter: 'brightness(1.1) contrast(1.1)' }}
+                      loading="lazy"
                     />
                   </div>
                 </div>
-
-                {/* Action to capture user interest */}
-                <button
-                  id="roi-connect-btn"
-                  onClick={() => setActivePage('contact')}
-                  className="w-full py-4.5 bg-neutral-900 hover:bg-neutral-900/60 text-white border border-brand-blue-bright/20 hover:border-brand-blue-bright transition-colors font-mono text-xs font-bold uppercase tracking-wider rounded-lg flex items-center justify-center gap-2 group cursor-pointer"
-                >
-                  Retrieve System Proposal
-                  <ArrowUpRight className="w-4 h-4 text-brand-blue-bright light:text-brand-blue group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </button>
-              </div>
-            </div>
+              </Reveal>
+            ))}
           </div>
-        </div>
 
-        {/* ================= SECTION 07: BENGALURU GEOGRAPHIC CORE MESH ================= */}
-        <div 
-          id="home-sec-6" 
-          className="snap-start relative w-full h-screen shrink-0 flex items-center justify-center overflow-hidden bg-brand-dark"
-        >
-          <div className="absolute inset-0 cyber-grid opacity-35" />
-          <div className="absolute bottom-[20%] left-[20%] w-[450px] h-[450px] rounded-full bg-brand-blue-bright/5 blur-[120px] pointer-events-none" />
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10 w-full pt-16">
-            {/* Left geographical graphics */}
-            <div className="lg:col-span-7 flex justify-center items-center order-2 lg:order-1">
-              <div className="w-full max-w-[500px] h-[340px] bg-neutral-900/80 border border-neutral-800 rounded-2xl relative shadow-2xl p-6 flex flex-col justify-between overflow-hidden">
-                <div className="flex items-center justify-between border-b border-neutral-800 pb-3 font-mono text-[9px] uppercase tracking-widest text-neutral-500">
-                  <span>Anchor Node Array</span>
-                  <span>IPv6 Connected Core</span>
-                </div>
-
-                {/* Interactive map coordinates representations */}
-                <div className="flex-1 relative my-4 flex items-center justify-center">
-                  {/* Draw global connections as stylized custom vector graph */}
-                  <svg className="absolute w-full h-full text-neutral-800" viewBox="0 0 100 100">
-                    <line x1="50" y1="50" x2="15" y2="35" stroke="currentColor" strokeWidth="0.8" strokeDasharray="3, 3" />
-                    <line x1="50" y1="50" x2="80" y2="25" stroke="currentColor" strokeWidth="0.8" strokeDasharray="3, 3" />
-                    <line x1="50" y1="50" x2="85" y2="70" stroke="currentColor" strokeWidth="0.8" strokeDasharray="3, 3" />
-                  </svg>
-
-                  {/* Bengaluru Center Node Anchor */}
-                  <div 
-                    onMouseEnter={() => setHoveredNode('bengaluru')}
-                    className="absolute z-15 cursor-pointer flex flex-col items-center"
-                    style={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
-                  >
-                    <div className="w-8 h-8 rounded-full bg-brand-blue-bright/20 border-2 border-brand-blue-bright flex items-center justify-center relative">
-                      <span className="absolute w-4 h-4 rounded-full bg-brand-blue-bright animate-ping" />
-                      <div className="w-3 h-3 rounded-full bg-brand-blue-bright shadow-[0_0_10px_#3B82F6]" />
-                    </div>
-                    <span className="font-mono text-[9px] font-bold text-white uppercase mt-1 bg-neutral-950 px-1.5 py-0.5 rounded border border-neutral-800">Bengaluru (HQ)</span>
-                  </div>
-
-                  {/* Silicon Valley Node */}
-                  <div 
-                    onMouseEnter={() => setHoveredNode('silicon_valley')}
-                    className="absolute z-10 cursor-pointer flex flex-col items-center"
-                    style={{ left: '15%', top: '35%', transform: 'translate(-50%, -50%)' }}
-                  >
-                    <div className="w-4 h-4 rounded-full bg-neutral-800 border border-neutral-600 hover:border-brand-blue-bright hover:bg-brand-blue-bright/20" />
-                    <span className="font-mono text-[8px] text-neutral-500 mt-1">Silicon Valley</span>
-                  </div>
-
-                  {/* Frankfurt Node */}
-                  <div 
-                    onMouseEnter={() => setHoveredNode('frankfurt')}
-                    className="absolute z-10 cursor-pointer flex flex-col items-center"
-                    style={{ left: '80%', top: '25%', transform: 'translate(-50%, -50%)' }}
-                  >
-                    <div className="w-4 h-4 rounded-full bg-neutral-800 border border-neutral-600 hover:border-brand-blue-bright hover:bg-brand-blue-bright/20" />
-                    <span className="font-mono text-[8px] text-neutral-500 mt-1">Frankfurt Node</span>
-                  </div>
-
-                  {/* Tokyo Node */}
-                  <div 
-                    onMouseEnter={() => setHoveredNode('tokyo')}
-                    className="absolute z-10 cursor-pointer flex flex-col items-center"
-                    style={{ left: '85%', top: '70%', transform: 'translate(-50%, -50%)' }}
-                  >
-                    <div className="w-4 h-4 rounded-full bg-neutral-800 border border-neutral-600 hover:border-brand-blue-bright hover:bg-brand-blue-bright/20" />
-                    <span className="font-mono text-[8px] text-neutral-500 mt-1">Tokyo Edge</span>
-                  </div>
-                </div>
-
-                {/* Displaying details of the node */}
-                <div className="mt-2 bg-neutral-950 p-3 rounded border border-neutral-900 font-mono text-[10px] grid grid-cols-2 gap-2 text-neutral-400">
-                  <div>
-                    <span className="text-neutral-500 block">CURRENT SELECTION</span>
-                    <span className="text-white font-bold uppercase">
-                      {hoveredNode === 'bengaluru' ? 'Bengaluru Sovereign HQ' : hoveredNode === 'silicon_valley' ? 'Silicon Valley Edge' : hoveredNode === 'frankfurt' ? 'Frankfurt Hub' : hoveredNode === 'tokyo' ? 'Tokyo Core Segment' : 'Hover a node anchor'}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-neutral-500 block">LATENCY PROJECTION</span>
-                    <span className="text-brand-blue-bright font-bold font-mono">
-                      {hoveredNode === 'bengaluru' ? 'Local Dedicated' : hoveredNode === 'silicon_valley' ? '128.4ms Sync' : hoveredNode === 'frankfurt' ? '110.2ms Sync' : hoveredNode === 'tokyo' ? '92.1ms Sync' : '---'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right intellectual content */}
-            <div className="lg:col-span-5 text-left space-y-5 order-1 lg:order-2">
-              <div className="font-mono text-xs uppercase tracking-widest text-brand-blue-bright light:text-brand-blue font-bold flex items-center gap-2">
-                <Globe className="w-4 h-4" />
-                07 / Grid Topology
-              </div>
-              <h2 className="font-display text-3xl sm:text-5xl font-bold text-white light:text-brand-dark tracking-tight leading-tight">
-                Global Edge Computing Mesh
-              </h2>
-              <p className="text-neutral-400 light:text-neutral-600 text-sm sm:text-base leading-relaxed">
-                Nexacore manages multi-region deployments designed to protect server sovereignty. Powered from our command center inside Marathahalli Bengaluru, model compute limits scale automatically to nearest client proxies.
-              </p>
-              <div className="flex gap-4">
-                <div className="border border-neutral-800 p-3 rounded bg-zinc-900/60 font-mono text-center shrink-0">
-                  <span className="block font-bold text-brand-blue-bright light:text-brand-blue text-lg">99.99%</span>
-                  <span className="text-[9px] text-neutral-500">SYSTEM UPTIME</span>
-                </div>
-                <div className="border border-neutral-800 p-3 rounded bg-zinc-900/60 font-mono text-center shrink-0">
-                  <span className="block font-bold text-white text-lg">N+1</span>
-                  <span className="text-[9px] text-neutral-500">BACKUP SLOTS</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ================= SECTION 08: ROADMAP TO AGI ================= */}
-        <div 
-          id="home-sec-7" 
-          className="snap-start relative w-full h-screen shrink-0 flex items-center justify-center overflow-hidden bg-brand-darker"
-        >
-          <div className="absolute inset-0 cyber-grid opacity-20" />
-          <div className="absolute top-[20%] right-[20%] w-[450px] h-[450px] rounded-full bg-brand-blue-bright/5 blur-[120px] pointer-events-none" />
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10 w-full pt-16">
-            <div className="lg:col-span-5 text-left space-y-5">
-              <div className="font-mono text-xs uppercase tracking-widest text-brand-blue-bright light:text-brand-blue font-bold flex items-center gap-2">
-                <Compass className="w-4 h-4" />
-                08 / AGI Horizon Roadmap
-              </div>
-              <h2 className="font-display text-3xl sm:text-5xl font-bold text-white light:text-brand-dark tracking-tight leading-tight">
-                Charting the Autonomous Era
-              </h2>
-              <p className="text-neutral-400 light:text-neutral-600 text-sm sm:text-base leading-relaxed">
-                Future-proofing modern enterprises isn't a passive task. Our blueprint designs self-evolving systems. Click each launch segment to see what we are manufacturing next.
-              </p>
-
-              <button
-                id="roadmap-connect-cta"
-                onClick={() => setActivePage('contact')}
-                className="px-6 py-3.5 bg-brand-blue-bright hover:bg-blue-600 text-white font-mono text-xs font-bold uppercase tracking-wider rounded-lg shadow-lg flex items-center gap-2 group cursor-pointer"
-              >
-                Join Sovereign Cohort
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          {/* View All */}
+          <Reveal delay={0.3}>
+            <div className="mt-14 flex flex-col items-center justify-center">
+              <button onClick={() => setActivePage('services')} className="inline-flex items-center gap-2 text-[#94A3B8] hover:text-[#3B82F6] text-[16px] font-medium transition-colors cursor-pointer mb-2">
+                View all services <ArrowRight className="w-4 h-4" />
               </button>
+              {/* Subtle glowing line under the button like in the reference */}
+              <div className="w-48 h-[1px] bg-gradient-to-r from-transparent via-[#3B82F6]/50 to-transparent" />
+              <div className="w-24 h-[1px] -mt-[1px] bg-gradient-to-r from-transparent via-[#3B82F6] to-transparent shadow-[0_0_8px_#3B82F6]" />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          SECTION 4: INDUSTRIES
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-24">
+        <div className="absolute inset-0 bg-[#030712] pointer-events-none" />
+
+        <div className="relative z-10 max-w-[1536px] mx-auto px-8 lg:px-12">
+          <Reveal>
+            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-8 mb-14">
+              <div className="max-w-xl">
+                <p className="font-mono text-[13px] tracking-[0.25em] text-[#3B82F6] font-bold uppercase mb-4">INDUSTRIES WE TRANSFORM</p>
+                <h2 className="font-display text-[3rem] lg:text-[3.5rem] font-bold text-white leading-[1.1] tracking-tight">
+                  Intelligence That Powers<br />Every Industry
+                </h2>
+              </div>
+              <p className="text-[#94A3B8] text-[16px] leading-[1.8] max-w-[300px] lg:mt-10 lg:text-right">
+                Tailored AI solutions for
+                mission-critical industries.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              { name: 'Banking', desc: 'Intelligent risk, fraud detection & automation.', img: 'industry-banking.png', accent: 'text-[#3B82F6]', hoverAccent: 'group-hover:text-[#60A5FA]' },
+              { name: 'Finance', desc: 'Smarter analytics, trading, & forecasting.', img: 'industry-finance.png', accent: 'text-[#A855F7]', hoverAccent: 'group-hover:text-[#C084FC]' }, // Purple accent
+              { name: 'Healthcare', desc: 'AI for diagnostics, patient care & more.', img: 'industry-healthcare.png', accent: 'text-[#3B82F6]', hoverAccent: 'group-hover:text-[#60A5FA]' },
+              { name: 'Ecommerce & Retail', desc: 'Personalization, demand forecasting & automation.', img: 'industry-ecommerce.png', accent: 'text-[#3B82F6]', hoverAccent: 'group-hover:text-[#60A5FA]' },
+            ].map((ind, i) => (
+              <Reveal key={i} delay={i * 0.1}>
+                <div className="bg-[#050B14] border border-[#1E293B]/80 rounded-2xl overflow-hidden group hover:border-[#3B82F6]/40 transition-all duration-500 flex flex-col h-full">
+                  <div className="relative h-[130px] lg:h-[150px] overflow-hidden">
+                    <img src={`${base}images/${ind.img}`} alt={ind.name} className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-700" loading="lazy" />
+                  </div>
+                  <div className="p-4 lg:p-5 flex-grow flex flex-col">
+                    <h3 className="font-display text-[20px] font-bold text-white mb-1.5 tracking-tight">{ind.name}</h3>
+                    <p className="text-[#CBD5E1] text-[15px] leading-[1.6] mb-4 flex-grow">{ind.desc}</p>
+                    <button onClick={() => setActivePage('industries')} className={`inline-flex items-center gap-1.5 ${ind.accent} ${ind.hoverAccent} text-[15px] font-semibold transition-all cursor-pointer`}>
+                      Explore <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal delay={0.35}>
+            <div className="mt-14 flex flex-col items-center justify-center">
+              <button onClick={() => setActivePage('industries')} className="inline-flex items-center gap-2 text-[#94A3B8] hover:text-[#3B82F6] text-[16px] font-medium transition-colors cursor-pointer mb-2">
+                View all industries <ArrowRight className="w-4 h-4" />
+              </button>
+              {/* Glowing line matching the services section */}
+              <div className="w-48 h-[1px] bg-gradient-to-r from-transparent via-[#3B82F6]/50 to-transparent" />
+              <div className="w-24 h-[1px] -mt-[1px] bg-gradient-to-r from-transparent via-[#3B82F6] to-transparent shadow-[0_0_8px_#3B82F6]" />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          SECTION 5: AI OPERATING SYSTEM
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 cyber-grid opacity-10 pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#2563EB]/[0.04] blur-[200px] pointer-events-none" />
+
+        <div className="relative z-10 max-w-[1536px] mx-auto px-8 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            {/* Left text */}
+            <div className="lg:col-span-4">
+              <Reveal>
+                <p className="font-mono text-[13px] tracking-[0.25em] text-[#3B82F6] uppercase mb-4">OUR INTELLIGENCE LAYER</p>
+                <h2 className="font-display text-[2.75rem] lg:text-[3.25rem] font-bold text-white leading-[1.12] tracking-tight mb-5">
+                  The Nexacore AI<br />Operating System
+                </h2>
+                <p className="text-[#CBD5E1] text-[16px] leading-[1.7] max-w-[380px]">
+                  A secure, scalable, and autonomous AI infrastructure
+                  layer that orchestrates data, models, and agents
+                  across your enterprise.
+                </p>
+              </Reveal>
             </div>
 
-            {/* Right Interactive Milestones Selector */}
-            <div className="lg:col-span-7 flex justify-center items-center">
-              <div className="w-full max-w-[500px] h-[340px] bg-neutral-900 border border-neutral-850 p-6 rounded-2xl relative shadow-2xl flex flex-col justify-between">
-                <div className="flex justify-between items-center pb-3 border-b border-neutral-800">
-                  <span className="font-mono text-[9px] uppercase tracking-widest text-neutral-500">Corporate System Roadmap</span>
-                  <span className="font-mono text-[9px] text-brand-blue-bright light:text-brand-blue font-bold">2026 - 2028 Blueprint</span>
-                </div>
+            {/* Right: Hub diagram */}
+            <div className="lg:col-span-8">
+              <Reveal delay={0.15}>
+                <div 
+                  className="relative flex flex-col lg:flex-row items-center justify-center py-4 lg:py-10"
+                  onMouseMove={handleHubMouseMove}
+                >
+                  {/* Mouse Spotlight (only visible on hover) */}
+                  <div 
+                    className="absolute pointer-events-none rounded-full bg-[#3B82F6]/20 blur-[100px] w-[300px] h-[300px] transition-opacity duration-300 opacity-0 lg:group-hover:opacity-100"
+                    style={{
+                      left: hubMousePos.x - 150,
+                      top: hubMousePos.y - 150,
+                    }}
+                  />
 
-                {/* Milestone Pills */}
-                <div className="grid grid-cols-4 gap-2.5 my-4">
-                  {roadmapData.map((tech, idx) => (
-                    <button
-                      id={`roadmap-item-${idx}`}
-                      key={idx}
-                      onClick={() => setSelectedPhase(idx)}
-                      className={`p-3 rounded-lg border text-left font-mono transition-all cursor-pointer ${
-                        selectedPhase === idx 
-                          ? 'border-brand-blue-bright bg-brand-blue-bright/10 text-white' 
-                          : 'border-neutral-850 bg-neutral-950 text-neutral-500 hover:border-neutral-800'
-                      }`}
-                    >
-                      <span className="block text-[8px] text-brand-blue-bright light:text-brand-blue font-bold">{tech.timeline}</span>
-                      <span className="block text-xs font-bold font-display mt-1">{tech.phase}</span>
-                    </button>
+                  {/* Left labels */}
+                  <div className="flex flex-col gap-6 lg:gap-8 items-end z-10 w-full lg:w-auto mt-8 lg:mt-0 order-2 lg:order-1">
+                    {[
+                      { icon: Database, label: 'Data Sources' },
+                      { icon: Server, label: 'Enterprise Systems' },
+                      { icon: Code, label: 'APIs & Integrations' },
+                      { icon: Activity, label: 'Real-time Streams' }
+                    ].map((item, i) => (
+                      <motion.div key={i} className="relative group flex items-center gap-3 bg-[#0A1020]/80 backdrop-blur-sm border border-[#1E293B] hover:border-[#3B82F6]/50 rounded-full py-2 px-3 pl-4 transition-all duration-300 w-full lg:w-auto max-w-[240px]" initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 + 0.3 }}>
+                        {/* Connecting line right (Desktop only) */}
+                        <div className="hidden lg:block absolute top-1/2 -right-[40px] xl:-right-[80px] w-[40px] xl:w-[80px] h-[1px] bg-gradient-to-r from-[#3B82F6]/80 to-transparent opacity-30 group-hover:opacity-100 transition-opacity">
+                          {/* Animated flowing data dot */}
+                          <div className="absolute top-0 left-0 w-8 h-[1px] bg-white opacity-0 group-hover:opacity-100 group-hover:animate-[scan_1s_ease-in-out_infinite]" style={{ boxShadow: '0 0 10px #fff' }} />
+                        </div>
+                        
+                        <span className="text-[13px] font-medium text-[#94A3B8] group-hover:text-white transition-colors whitespace-nowrap flex-grow text-right lg:text-left">{item.label}</span>
+                        <div className="w-7 h-7 rounded-full bg-[#1E293B]/80 border border-[#3B82F6]/30 flex flex-shrink-0 items-center justify-center group-hover:bg-[#3B82F6]/20 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all">
+                          <item.icon className="w-3.5 h-3.5 text-[#3B82F6]" />
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Center core */}
+                  <motion.div 
+                    className="relative mx-8 xl:mx-16 flex-shrink-0 z-20 order-1 lg:order-2" 
+                    initial={{ opacity: 0, scale: 0.85 }} 
+                    whileInView={{ opacity: 1, scale: 1 }} 
+                    viewport={{ once: true }} 
+                    transition={{ delay: 0.2, duration: 0.7 }}
+                    style={{
+                      transform: `perspective(1000px) rotateX(${(hubMousePos.y - 200) / -30}deg) rotateY(${(hubMousePos.x - 200) / 30}deg)`,
+                      transition: 'transform 0.1s ease-out'
+                    }}
+                  >
+                    <div className="relative w-56 h-56 lg:w-72 lg:h-72 flex items-center justify-center">
+                       {/* Multiple Concentric Rings */}
+                       
+                       {/* Outer Dashed */}
+                       <div className="absolute inset-0 rounded-full border border-dashed border-[#3B82F6]/30 animate-[spin_20s_linear_infinite]" />
+                       
+                       {/* Mid Solid Glow */}
+                       <div className="absolute inset-4 rounded-full border border-[#3B82F6]/40 bg-[#050B14]/40 backdrop-blur-md shadow-[0_0_30px_rgba(59,130,246,0.15)] animate-[spin_15s_linear_infinite_reverse]" style={{ borderTopColor: 'transparent', borderBottomColor: 'transparent' }} />
+
+                       {/* Inner Bright Ring */}
+                       <div className="absolute inset-10 rounded-full border-2 border-[#3B82F6]/60 shadow-[inset_0_0_20px_rgba(59,130,246,0.3)] animate-[spin_10s_linear_infinite]" />
+                       
+                       {/* Core Solid */}
+                       <div className="absolute inset-16 rounded-full bg-gradient-to-tr from-[#1D4ED8] to-[#06B6D4] flex items-center justify-center shadow-[0_0_40px_rgba(37,99,235,0.6)] group hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
+                          {/* Inner dark center */}
+                          <div className="w-[88%] h-[88%] rounded-full bg-[#030712] border border-[#3B82F6]/50 flex flex-col items-center justify-center shadow-[inset_0_0_20px_rgba(37,99,235,0.8)] relative overflow-hidden">
+                             {/* Scanning line inside core */}
+                             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#3B82F6]/20 to-transparent -translate-y-full animate-[scan_2s_ease-in-out_infinite]" />
+                             
+                             <span className="font-display text-[11px] lg:text-[14px] font-bold tracking-[0.15em] text-white z-10 drop-shadow-md">NEXACORE</span>
+                             <span className="font-display text-[9px] lg:text-[10px] font-bold tracking-wider text-[#3B82F6] z-10 mt-0.5">AI CORE</span>
+                          </div>
+                       </div>
+                       
+                       {/* Orbiting Nodes */}
+                       <div className="absolute inset-0 animate-[spin_12s_linear_infinite]">
+                          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white shadow-[0_0_15px_#fff,0_0_30px_#3B82F6]" />
+                       </div>
+                       <div className="absolute inset-4 animate-[spin_8s_linear_infinite_reverse]">
+                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 rounded-full bg-[#06B6D4] shadow-[0_0_10px_#06B6D4,0_0_20px_#3B82F6]" />
+                       </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Right labels */}
+                  <div className="flex flex-col gap-6 lg:gap-8 items-start z-10 w-full lg:w-auto mt-6 lg:mt-0 order-3">
+                    {[
+                      { icon: Network, label: 'Multi-Agent System' },
+                      { icon: Brain, label: 'Reasoning Engine' },
+                      { icon: Layers, label: 'Generative Models' },
+                      { icon: Workflow, label: 'Actions & Workflows' }
+                    ].map((item, i) => (
+                      <motion.div key={i} className="relative group flex items-center gap-3 bg-[#0A1020]/80 backdrop-blur-sm border border-[#1E293B] hover:border-[#3B82F6]/50 rounded-full py-2 px-3 pr-4 transition-all duration-300 w-full lg:w-auto max-w-[240px]" initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 + 0.3 }}>
+                        {/* Connecting line left (Desktop only) */}
+                        <div className="hidden lg:block absolute top-1/2 -left-[40px] xl:-left-[80px] w-[40px] xl:w-[80px] h-[1px] bg-gradient-to-l from-[#3B82F6]/80 to-transparent opacity-30 group-hover:opacity-100 transition-opacity">
+                           {/* Animated flowing data dot */}
+                           <div className="absolute top-0 right-0 w-8 h-[1px] bg-white opacity-0 group-hover:opacity-100 group-hover:animate-[scan_1s_ease-in-out_infinite]" style={{ boxShadow: '0 0 10px #fff' }} />
+                        </div>
+                        
+                        <div className="w-7 h-7 rounded-full bg-[#1E293B]/80 border border-[#3B82F6]/30 flex flex-shrink-0 items-center justify-center group-hover:bg-[#3B82F6]/20 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all">
+                          <item.icon className="w-3.5 h-3.5 text-[#3B82F6]" />
+                        </div>
+                        <span className="text-[13px] font-medium text-[#94A3B8] group-hover:text-white transition-colors whitespace-nowrap">{item.label}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          SECTION 6: WHY NEXACORE
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-24">
+        <div className="absolute inset-0 cyber-grid opacity-10 pointer-events-none" />
+        {/* Subtle top ambient glow from screenshot */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[200px] rounded-[100%] bg-[#3B82F6]/5 blur-[100px] pointer-events-none" />
+
+        <div className="relative z-10 max-w-[1536px] mx-auto px-8 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            {/* Left heading */}
+            <div className="lg:col-span-5">
+              <Reveal>
+                <div className="w-full">
+                  <p className="font-mono text-[13px] tracking-[0.25em] text-[#3B82F6] uppercase mb-5">WHY NEXACORE -</p>
+                  <h2 className="font-display text-[2.5rem] lg:text-[3rem] xl:text-[3.25rem] font-bold text-white leading-[1.15] tracking-tight">
+                    Built for Security. Designed<br />
+                    for Scale. Engineered for the Future.
+                  </h2>
+                </div>
+              </Reveal>
+            </div>
+
+            {/* Right: 6 feature icons */}
+            <div className="lg:col-span-7">
+              <Reveal delay={0.15}>
+                <div className="grid grid-cols-3 lg:grid-cols-6 gap-x-4 gap-y-10 items-start">
+                  {[
+                    { icon: ShieldCheck, title: 'Enterprise Grade', sub: 'Security' },
+                    { icon: Hexagon, title: 'Scalable & Elastic', sub: 'Infrastructure' },
+                    { icon: Fingerprint, title: 'Private & Secure', sub: 'AI Models' },
+                    { icon: Database, title: 'RAG & Knowledge', sub: 'Systems' },
+                    { icon: Bot, title: 'Autonomous', sub: 'Multi-Agent Orchestration' },
+                    { icon: Target, title: 'Responsible', sub: 'AI Framework' },
+                  ].map((f, i) => (
+                    <div key={i} className="flex flex-col items-center text-center group">
+                      {/* Floating glowing icon container */}
+                      <div className="relative w-16 h-16 lg:w-20 lg:h-20 flex items-center justify-center mb-5">
+                        {/* Ambient blurred aura */}
+                        <div className="absolute inset-0 rounded-full bg-[#3B82F6]/10 blur-xl group-hover:bg-[#3B82F6]/20 transition-all duration-500" />
+                        
+                        {/* The Thin-Line Glowing Icon */}
+                        <f.icon 
+                          strokeWidth={1.2} 
+                          className="w-10 h-10 lg:w-11 lg:h-11 text-white relative z-10 group-hover:scale-110 transition-transform duration-500" 
+                          style={{ filter: 'drop-shadow(0 0 10px rgba(59,130,246,0.8))' }} 
+                        />
+                      </div>
+                      
+                      {/* Centered muted text */}
+                      <span className="text-[13px] font-medium text-[#CBD5E1] leading-tight mb-1">{f.title}</span>
+                      <span className="text-[12px] text-[#64748B] leading-tight max-w-[120px]">{f.sub}</span>
+                    </div>
                   ))}
                 </div>
+              </Reveal>
+            </div>
+          </div>
+        </div>
+      </section>
 
-                {/* Detailed view of active milestone phase */}
-                <div className="bg-neutral-950 p-4 rounded-xl border border-neutral-900 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h4 className="font-display font-semibold text-sm text-white mb-1 uppercase tracking-wide">
-                      {roadmapData[selectedPhase].title}
-                    </h4>
-                    <p className="text-neutral-400 font-sans text-xs leading-relaxed">
-                      {roadmapData[selectedPhase].details}
-                    </p>
+      {/* ═══════════════════════════════════════════
+          SECTION 7: CONTACT CTA
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-24 bg-[#020409]">
+        <div className="absolute inset-0 cyber-grid opacity-15 pointer-events-none" />
+        <div className="absolute top-[10%] left-[5%] w-[400px] h-[400px] rounded-full bg-[#2563EB]/[0.03] blur-[140px] pointer-events-none" />
+
+        <div className="relative z-10 max-w-[1536px] mx-auto px-8 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
+            {/* Left intro */}
+            <div className="lg:col-span-4 lg:pr-8">
+              <Reveal>
+                <div className="inline-block border border-[#1E293B] shadow-[inset_0_0_15px_rgba(59,130,246,0.05)] bg-[#050B14]/50 rounded-full px-3 py-1.5 mb-6">
+                  <p className="font-mono text-[11px] font-semibold tracking-[0.2em] text-[#3B82F6] uppercase">READY TO TRANSFORM?</p>
+                </div>
+                <h2 className="font-display text-[2.75rem] lg:text-[3.25rem] font-bold text-white leading-[1.1] tracking-tight mb-5">
+                  Let's Build the<br />Future Together
+                </h2>
+                <p className="text-[#94A3B8] text-[15px] leading-[1.6]">
+                  Partner with Nexacore AI Technologies and unlock the
+                  power of autonomous intelligence.
+                </p>
+              </Reveal>
+            </div>
+
+            {/* Center form */}
+            <div className="lg:col-span-4">
+              <Reveal delay={0.1}>
+                <div className="bg-[#0A1020] border border-[#1E293B]/80 rounded-2xl p-6 lg:p-8 shadow-2xl">
+                  {!isSubmitted ? (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <div>
+                        <label className="block text-[12px] font-semibold text-[#CBD5E1] mb-1.5">Your Name</label>
+                        <input id="cta-name" type="text" name="name" className="w-full bg-[#050B14] border border-[#1E293B]/80 text-white text-[14px] px-4 py-2.5 rounded-lg focus:border-[#3B82F6] focus:outline-none transition-colors placeholder:text-[#475569]" placeholder="Enter your name" value={formData.name} onChange={handleInput} />
+                      </div>
+                      <div>
+                        <label className="block text-[12px] font-semibold text-[#CBD5E1] mb-1.5">Work Email</label>
+                        <input id="cta-email" type="email" name="email" className="w-full bg-[#050B14] border border-[#1E293B]/80 text-white text-[14px] px-4 py-2.5 rounded-lg focus:border-[#3B82F6] focus:outline-none transition-colors placeholder:text-[#475569]" placeholder="Enter your email" value={formData.email} onChange={handleInput} />
+                      </div>
+                      <div>
+                        <label className="block text-[12px] font-semibold text-[#CBD5E1] mb-1.5">Company</label>
+                        <input id="cta-company" type="text" name="company" className="w-full bg-[#050B14] border border-[#1E293B]/80 text-white text-[14px] px-4 py-2.5 rounded-lg focus:border-[#3B82F6] focus:outline-none transition-colors placeholder:text-[#475569]" placeholder="Enter company name" value={formData.company} onChange={handleInput} />
+                      </div>
+                      <div>
+                        <label className="block text-[12px] font-semibold text-[#CBD5E1] mb-1.5">Your Message</label>
+                        <textarea id="cta-message" name="message" rows={3} className="w-full bg-[#050B14] border border-[#1E293B]/80 text-white text-[14px] px-4 py-2.5 rounded-lg focus:border-[#3B82F6] focus:outline-none transition-colors resize-none placeholder:text-[#475569]" placeholder="Tell us about your requirements" value={formData.message} onChange={handleInput} />
+                      </div>
+                      <button
+                        id="cta-submit"
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full py-3 bg-[#1D4ED8] hover:bg-[#2563EB] disabled:opacity-50 text-white text-[14px] font-semibold rounded-lg shadow-lg flex items-center justify-center gap-2 cursor-pointer transition-all mt-2"
+                      >
+                        {isSubmitting ? 'Sending...' : <><span>Send Message</span><ArrowRight className="w-4 h-4" /></>}
+                      </button>
+                    </form>
+                  ) : (
+                    <div className="text-center py-10 space-y-3">
+                      <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto">
+                        <Send className="w-6 h-6 text-emerald-400" />
+                      </div>
+                      <h3 className="font-display text-lg font-bold text-white">Message Sent!</h3>
+                      <p className="text-[#64748B] text-[16px]">We'll get back to you within 24 hours.</p>
+                      <button onClick={() => setIsSubmitted(false)} className="text-[#3B82F6] text-[16px] font-medium cursor-pointer hover:underline">Send another</button>
+                    </div>
+                  )}
+                </div>
+              </Reveal>
+            </div>
+
+            {/* Right contact info */}
+            <div className="lg:col-span-4">
+              <Reveal delay={0.2}>
+                <div className="bg-[#0A1020] border border-[#1E293B]/80 rounded-2xl p-6 lg:p-8 space-y-8 shadow-2xl h-full">
+                  
+                  {/* Header Row */}
+                  <div className="flex items-start gap-4">
+                    <div className="relative w-11 h-11 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <div className="absolute inset-0 rounded-full border border-[#3B82F6]/30 shadow-[inset_0_0_15px_rgba(59,130,246,0.15)]" />
+                      <div className="absolute inset-[3px] rounded-full bg-[#0F172A]" />
+                      <Phone className="w-4 h-4 text-[#3B82F6] relative z-10" />
+                    </div>
+                    <div>
+                      <span className="block font-display text-[16px] font-bold text-white mb-1">Get in touch</span>
+                      <p className="text-[#94A3B8] text-[13px] leading-[1.6]">
+                        We're here to help you build intelligent, future-ready systems.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Contact Rows */}
+                  <div className="space-y-5">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-[#0F172A] border border-[#1E293B]/80 flex items-center justify-center flex-shrink-0 shadow-sm">
+                        <Mail className="w-4 h-4 text-[#94A3B8]" />
+                      </div>
+                      <div>
+                        <span className="block text-[11px] text-[#64748B] font-semibold uppercase tracking-wider mb-0.5">Email</span>
+                        <a href="mailto:contact@nexacoreai.com" className="text-[14px] text-[#CBD5E1] hover:text-[#3B82F6] transition-colors">contact@nexacoreai.com</a>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-[#0F172A] border border-[#1E293B]/80 flex items-center justify-center flex-shrink-0 shadow-sm">
+                        <Phone className="w-4 h-4 text-[#94A3B8]" />
+                      </div>
+                      <div>
+                        <span className="block text-[11px] text-[#64748B] font-semibold uppercase tracking-wider mb-0.5">Phone</span>
+                        <a href="tel:+919876543210" className="text-[14px] text-[#CBD5E1] hover:text-[#3B82F6] transition-colors">+91 98765 43210</a>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-[#0F172A] border border-[#1E293B]/80 flex items-center justify-center flex-shrink-0 shadow-sm">
+                        <MapPin className="w-4 h-4 text-[#94A3B8]" />
+                      </div>
+                      <div>
+                        <span className="block text-[11px] text-[#64748B] font-semibold uppercase tracking-wider mb-0.5">Location</span>
+                        <span className="text-[14px] text-[#CBD5E1]">Marathahalli, Bengaluru, India</span>
+                      </div>
+                    </div>
                   </div>
                   
-                  {/* Phase status node check lines */}
-                  <div className="pt-2 border-t border-neutral-900/60 flex items-center justify-between text-[10px] text-neutral-500 font-mono uppercase">
-                    <span>Validation Nodes</span>
-                    <span className="text-emerald-400 font-bold flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      Status: ACTIVE SETUP
-                    </span>
-                  </div>
                 </div>
-              </div>
+              </Reveal>
             </div>
           </div>
         </div>
-
-      </div>
+      </section>
     </div>
   );
 }
