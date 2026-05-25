@@ -175,13 +175,13 @@ export default function Home({ setActivePage }: HomeProps) {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, duration: 1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="relative w-full max-w-[660px] flex items-center justify-center">
+              <div className="relative w-full max-w-[750px] flex items-center justify-center">
                 {/* Cinematic Ambient Glow Behind Video */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-[#3B82F6]/15 blur-[80px] rounded-full pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#3B82F6]/15 blur-[100px] rounded-full pointer-events-none" />
 
                 {/* Video — mix-blend-mode: screen makes all black pixels invisible */}
                 <video
-                  className="relative w-full h-auto scale-[1.15]"
+                  className="relative w-full h-auto scale-[1.55]"
                   autoPlay
                   loop
                   muted
