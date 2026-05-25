@@ -68,7 +68,6 @@ export default function Contact() {
   return (
     <div className="relative min-h-screen bg-transparent pt-32 pb-24 overflow-hidden">
       {/* Structural background assets */}
-      <div className="absolute inset-0 cyber-grid opacity-20" />
       <div className="absolute top-[10%] left-[10%] w-[600px] h-[600px] rounded-full bg-[#1D4ED8]/10 blur-[150px] pointer-events-none" />
       <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] rounded-full bg-[#3B82F6]/5 blur-[120px] pointer-events-none" />
 

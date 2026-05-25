@@ -83,8 +83,7 @@ export default function Home({ setActivePage }: HomeProps) {
           SECTION 1: HERO
           ═══════════════════════════════════════════ */}
       <section className="relative overflow-hidden pt-10">
-        {/* Background grid + glow */}
-        <div className="absolute inset-0 cyber-grid opacity-25 pointer-events-none" />
+        {/* Background glow */}
         <div className="absolute top-[10%] left-[5%] w-[700px] h-[700px] rounded-full bg-[#2563EB]/[0.04] blur-[180px] pointer-events-none" />
         <div className="absolute bottom-0 right-[10%] w-[500px] h-[500px] rounded-full bg-[#2563EB]/[0.03] blur-[140px] pointer-events-none" />
 
@@ -418,7 +417,6 @@ export default function Home({ setActivePage }: HomeProps) {
           SECTION 5: AI OPERATING SYSTEM
           ═══════════════════════════════════════════ */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 cyber-grid opacity-10 pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#2563EB]/[0.04] blur-[200px] pointer-events-none" />
 
         <div className="relative z-10 max-w-[1536px] mx-auto px-8 lg:px-12">
@@ -556,7 +554,6 @@ export default function Home({ setActivePage }: HomeProps) {
           SECTION 6: WHY NEXACORE
           ═══════════════════════════════════════════ */}
       <section className="relative py-24">
-        <div className="absolute inset-0 cyber-grid opacity-10 pointer-events-none" />
         {/* Subtle top ambient glow from screenshot */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[200px] rounded-[100%] bg-[#3B82F6]/5 blur-[100px] pointer-events-none" />
 
@@ -617,7 +614,6 @@ export default function Home({ setActivePage }: HomeProps) {
           SECTION 7: CONTACT CTA
           ═══════════════════════════════════════════ */}
       <section className="relative py-24 bg-transparent">
-        <div className="absolute inset-0 cyber-grid opacity-15 pointer-events-none" />
         <div className="absolute top-[10%] left-[5%] w-[400px] h-[400px] rounded-full bg-[#2563EB]/[0.03] blur-[140px] pointer-events-none" />
 
         <div className="relative z-10 max-w-[1536px] mx-auto px-8 lg:px-12">
