@@ -50,61 +50,29 @@ export default function Footer({ setActivePage }: FooterProps) {
   ];
 
   return (
-    <footer className="relative bg-transparent overflow-hidden pt-10 border-t border-[#1E293B]/20">
+    <footer className="relative bg-transparent overflow-hidden pt-12 border-t border-[#1E293B]/10">
       {/* Cinematic Ambient Glows */}
-      <div className="absolute inset-0 cyber-grid opacity-15 pointer-events-none" />
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[250px] bg-[#1D4ED8]/10 blur-[120px] pointer-events-none rounded-t-full" />
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#1E293B]/40 to-transparent" />
+      <div className="absolute inset-0 cyber-grid opacity-10 pointer-events-none" />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[180px] bg-[#1D4ED8]/5 blur-[100px] pointer-events-none rounded-t-full" />
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#1E293B]/20 to-transparent" />
       
       <div className="relative max-w-[1440px] mx-auto px-6 lg:px-12 z-10 pb-8">
-        <div className="flex flex-col lg:flex-row justify-between gap-10 lg:gap-16">
-          {/* Logo & Vision Section */}
-          <div className="shrink-0 max-w-sm space-y-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 lg:gap-12">
+          {/* Logo, Description & Socials Column */}
+          <div className="col-span-2 space-y-4 pr-4">
             <button
               id="footer-logo-btn"
               onClick={() => handlePageClick('home')}
-              className="cursor-pointer focus:outline-none"
+              className="cursor-pointer focus:outline-none block"
             >
               <Logo />
             </button>
-            <p className="text-[13px] text-neutral-400 leading-relaxed font-sans max-w-[320px]">
+            <p className="text-[12px] text-neutral-400 leading-relaxed font-sans max-w-[300px]">
               Architecting the autonomous enterprise. We build secure data pipelines, deploy generative intelligence, and orchestrate multi-agent swarms.
             </p>
-          </div>
-
-          {/* Navigation Columns */}
-          <div className="flex flex-wrap gap-x-12 gap-y-6">
-            {footerColumns.map((col, idx) => (
-              <div key={idx} className="min-w-[120px]">
-                <h4 className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-4 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]/60 border border-[#3B82F6]/50" />
-                  {col.title}
-                </h4>
-                <ul className="space-y-2">
-                  {col.links.map((link, linkIdx) => (
-                    <li key={linkIdx}>
-                      <button
-                        id={`footer-nav-${idx}-${linkIdx}`}
-                        onClick={() => handlePageClick(link.page)}
-                        className="text-[13px] text-neutral-400 hover:text-[#60A5FA] transition-colors cursor-pointer flex items-center gap-1.5 group"
-                      >
-                        <span className="w-0 h-[1px] bg-[#60A5FA] transition-all duration-300 group-hover:w-2" />
-                        {link.label}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-
-          {/* Social Icons */}
-          <div className="shrink-0">
-            <h4 className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.2em] mb-4 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]/60 border border-[#3B82F6]/50" />
-              Follow us
-            </h4>
-            <div className="flex items-center gap-2.5">
+            
+            {/* Social Icons inside Brand Column */}
+            <div className="flex items-center gap-2 pt-2">
               {[
                 { icon: Linkedin, label: 'LinkedIn' },
                 { icon: Twitter, label: 'Twitter' },
@@ -116,26 +84,48 @@ export default function Footer({ setActivePage }: FooterProps) {
                   id={`footer-social-${idx}`}
                   href="#"
                   aria-label={social.label}
-                  className="w-9 h-9 rounded-full bg-[#0A0F1E]/80 border border-[#1E293B] flex items-center justify-center text-neutral-400 hover:text-[#3B82F6] hover:border-[#3B82F6]/50 hover:shadow-[0_0_15px_rgba(59,130,246,0.15)] transition-all group"
+                  className="w-8 h-8 rounded-full bg-[#0A0F1E]/80 border border-[#1E293B] flex items-center justify-center text-neutral-400 hover:text-[#3B82F6] hover:border-[#3B82F6]/50 hover:shadow-[0_0_12px_rgba(59,130,246,0.15)] transition-all duration-300 group"
                 >
-                  <social.icon className="w-3.5 h-3.5 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
+                  <social.icon className="w-3 h-3 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
                 </a>
               ))}
             </div>
           </div>
+
+          {/* Navigation Columns (4 Columns) */}
+          {footerColumns.map((col, idx) => (
+            <div key={idx} className="col-span-1 min-w-[120px]">
+              <h4 className="font-mono text-[9px] font-semibold text-neutral-300 uppercase tracking-[0.25em] mb-3 flex items-center gap-1.5 select-none">
+                <span className="w-1 h-1 rounded-full bg-[#2563EB] animate-pulse" />
+                {col.title}
+              </h4>
+              <ul className="space-y-1.5">
+                {col.links.map((link, linkIdx) => (
+                  <li key={linkIdx}>
+                    <button
+                      id={`footer-nav-${idx}-${linkIdx}`}
+                      onClick={() => handlePageClick(link.page)}
+                      className="text-[12px] text-neutral-400 hover:text-[#60A5FA] hover:translate-x-0.5 transition-all duration-300 cursor-pointer flex items-center gap-1 group font-sans text-left"
+                    >
+                      {link.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Copyright Bar */}
-      <div className="relative border-t border-[#1E293B]/40 bg-[#060B18]/30 backdrop-blur-md">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-transparent pointer-events-none" />
-        <div className="relative max-w-[1440px] mx-auto px-6 lg:px-12 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="text-[12px] text-neutral-500 font-mono tracking-wide">
+      <div className="relative border-t border-[#1E293B]/10 bg-transparent py-4">
+        <div className="relative max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-neutral-500 font-mono tracking-wider">
+          <span>
             © 2026 NEXACORE AI TECHNOLOGIES. ALL RIGHTS RESERVED.
           </span>
-          <div className="flex gap-4 text-[12px] text-neutral-500 font-sans">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+          <div className="flex gap-4 font-sans font-medium text-[11px]">
+            <a href="#" className="hover:text-white transition-colors duration-300">Privacy Policy</a>
+            <a href="#" className="hover:text-white transition-colors duration-300">Terms of Service</a>
           </div>
         </div>
       </div>

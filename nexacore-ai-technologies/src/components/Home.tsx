@@ -601,7 +601,7 @@ export default function Home({ setActivePage }: HomeProps) {
       {/* ═══════════════════════════════════════════
           SECTION 7: CONTACT CTA
           ═══════════════════════════════════════════ */}
-      <section className="relative py-24 bg-[#020409]">
+      <section className="relative py-24 bg-transparent">
         <div className="absolute inset-0 cyber-grid opacity-15 pointer-events-none" />
         <div className="absolute top-[10%] left-[5%] w-[400px] h-[400px] rounded-full bg-[#2563EB]/[0.03] blur-[140px] pointer-events-none" />
 

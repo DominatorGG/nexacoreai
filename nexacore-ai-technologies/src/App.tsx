@@ -51,18 +51,37 @@ export default function App() {
   };
 
   return (
-    <div className={`transition-colors duration-300 ${
+    <div className={`relative min-h-screen transition-colors duration-300 overflow-x-hidden ${
       isDark 
-        ? 'dark text-neutral-200' 
+        ? 'dark text-neutral-200 bg-[#02040a]' 
         : 'light bg-neutral-50 text-neutral-800'
-    }`} style={{ 
-      backgroundColor: isDark ? '#030712' : undefined,
-      backgroundImage: isDark 
-        ? `radial-gradient(ellipse at 50% 100%, rgba(37, 99, 235, ${0.12 * scrollRatio}) 0%, rgba(6, 182, 212, ${0.03 * scrollRatio}) 50%, #030712 100%)` 
-        : undefined,
-      backgroundAttachment: 'fixed',
-      backgroundSize: '100% 100%'
-    }}>
+    }`}>
+      {/* Volumetric Scroll-Driven Parallax Glows */}
+      {isDark && (
+        <>
+          {/* Deep Blue volumetric base - rises faster */}
+          <div 
+            className="fixed bottom-0 left-1/2 -translate-x-1/2 w-[1400px] h-[550px] rounded-full pointer-events-none transition-transform duration-300 ease-out -z-10"
+            style={{
+              background: 'radial-gradient(ellipse at 50% 100%, rgba(29, 78, 216, 0.16) 0%, rgba(37, 99, 235, 0.04) 50%, transparent 100%)',
+              opacity: scrollRatio,
+              transform: `translate(-50%, ${160 - scrollRatio * 160}px)`,
+              filter: 'blur(100px)',
+            }}
+          />
+          {/* Electric Cyan volumetric core - rises slower for 3D parallax depth */}
+          <div 
+            className="fixed bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-[380px] rounded-full pointer-events-none transition-transform duration-500 ease-out -z-10"
+            style={{
+              background: 'radial-gradient(ellipse at 50% 100%, rgba(6, 182, 212, 0.07) 0%, rgba(34, 211, 238, 0.01) 60%, transparent 100%)',
+              opacity: scrollRatio,
+              transform: `translate(-50%, ${90 - scrollRatio * 90}px)`,
+              filter: 'blur(85px)',
+            }}
+          />
+        </>
+      )}
+
       {/* Prime Header Navigation bar */}
       <Header 
         activePage={activePage} 
@@ -72,7 +91,7 @@ export default function App() {
       />
 
       {/* Main Core View Area with slide animation support */}
-      <main className="min-h-screen">
+      <main className="relative min-h-screen z-10">
         {activePage === 'home' && <Home setActivePage={setActivePage} />}
         {activePage === 'about' && <About />}
         {activePage === 'services' && <Services />}
