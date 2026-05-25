@@ -325,6 +325,19 @@ export default function Home({ setActivePage }: HomeProps) {
                       >
                         <source src={`${base}assets/videos/brainai_transparent.webm`} type="video/webm" />
                       </video>
+                    ) : s.num === '03' ? (
+                      <video
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95 mix-blend-screen"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        style={{ 
+                          filter: 'brightness(1.2) contrast(1.15)',
+                        }}
+                      >
+                        <source src={`${base}assets/videos/neur1_transparent.webm`} type="video/webm" />
+                      </video>
                     ) : (
                       <img
                         src={`${base}images/${s.img}`}
