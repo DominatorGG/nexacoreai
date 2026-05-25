@@ -295,7 +295,7 @@ export default function Home({ setActivePage }: HomeProps) {
                 <div className="relative bg-[#050B14] border border-[#1E293B]/60 rounded-xl overflow-hidden group hover:border-[#3B82F6]/30 transition-all duration-500 h-[220px] lg:h-[240px] flex">
                   
                   {/* Left Content (Text) */}
-                  <div className="relative z-10 w-[55%] p-5 lg:p-6 flex flex-col h-full">
+                  <div className="relative z-20 w-[58%] p-5 lg:p-6 flex flex-col h-full">
                     <span className="font-mono text-[14px] text-[#94A3B8] font-medium tracking-wider mb-3 block">{s.num}</span>
                     <h3 className="font-display text-[20px] font-bold text-white mb-2 tracking-tight">{s.title}</h3>
                     <p className="text-[#CBD5E1] text-[15px] leading-[1.6] flex-grow pr-2">{s.desc}</p>
@@ -308,7 +308,7 @@ export default function Home({ setActivePage }: HomeProps) {
                   </div>
 
                   {/* Right Content (Image or Video) */}
-                  <div className="absolute top-0 right-0 bottom-0 w-[60%] flex items-center justify-center overflow-hidden pointer-events-none">
+                  <div className="absolute z-10 top-0 right-0 bottom-0 w-[60%] flex items-center justify-center overflow-hidden pointer-events-none">
                     {/* Gradient fade to blend smoothly into the left text area */}
                     <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#050B14] to-transparent z-10" />
                     
