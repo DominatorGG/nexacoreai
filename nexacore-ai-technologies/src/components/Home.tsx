@@ -180,30 +180,20 @@ export default function Home({ setActivePage }: HomeProps) {
                 {/* Cinematic Ambient Glow Behind Video */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-[#3B82F6]/15 blur-[80px] rounded-full pointer-events-none" />
 
-                {/* Video with soft radial mask for edge softening */}
-                <div 
-                  className="relative z-10 w-full scale-[1.2]"
-                  style={{
-                    maskImage: 'radial-gradient(ellipse 75% 70% at 50% 50%, black 45%, transparent 100%)',
-                    WebkitMaskImage: 'radial-gradient(ellipse 75% 70% at 50% 50%, black 45%, transparent 100%)',
+                {/* Video — mix-blend-mode: screen makes all black pixels invisible */}
+                <video
+                  className="relative w-full h-auto scale-[1.15]"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  style={{ 
+                    mixBlendMode: 'screen',
+                    filter: 'contrast(1.1) brightness(1.05)', 
                   }}
                 >
-                  <video
-                    className="w-full h-auto"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    style={{ 
-                      mixBlendMode: 'screen',
-                      filter: 'contrast(1.1) brightness(1.05)', 
-                      transform: 'translateZ(0)', 
-                      willChange: 'transform' 
-                    }}
-                  >
-                    <source src={`${base}assets/videos/crpnex_loop.webm`} type="video/webm" />
-                  </video>
-                </div>
+                  <source src={`${base}assets/videos/crpnex_loop.webm`} type="video/webm" />
+                </video>
               </div>
             </motion.div>
           </div>
