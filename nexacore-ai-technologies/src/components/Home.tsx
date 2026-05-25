@@ -77,7 +77,7 @@ export default function Home({ setActivePage }: HomeProps) {
   const base = (import.meta as any).env?.BASE_URL || '/Nexacore/';
 
   return (
-    <div className="bg-[#030712] min-h-screen">
+    <div className="bg-transparent min-h-screen">
       
       {/* ═══════════════════════════════════════════
           SECTION 1: HERO
@@ -241,7 +241,7 @@ export default function Home({ setActivePage }: HomeProps) {
           SECTION 3: SERVICES (CORE CAPABILITIES)
           ═══════════════════════════════════════════ */}
       <section className="relative py-24">
-        <div className="absolute inset-0 bg-[#030712] pointer-events-none" />
+        <div className="absolute inset-0 bg-transparent pointer-events-none" />
 
         <div className="relative z-10 max-w-[1536px] mx-auto px-8 lg:px-12">
           {/* Header */}
@@ -344,7 +344,7 @@ export default function Home({ setActivePage }: HomeProps) {
           SECTION 4: INDUSTRIES
           ═══════════════════════════════════════════ */}
       <section className="relative py-24">
-        <div className="absolute inset-0 bg-[#030712] pointer-events-none" />
+        <div className="absolute inset-0 bg-transparent pointer-events-none" />
 
         <div className="relative z-10 max-w-[1536px] mx-auto px-8 lg:px-12">
           <Reveal>

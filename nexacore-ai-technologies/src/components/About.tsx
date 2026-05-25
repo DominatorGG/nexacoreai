@@ -57,7 +57,7 @@ export default function About() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#050B14] pt-32 pb-24 overflow-hidden">
+    <div className="relative min-h-screen bg-transparent pt-32 pb-24 overflow-hidden">
       {/* Cinematic Background Assets */}
       <div className="absolute inset-0 cyber-grid opacity-20 pointer-events-none" />
       <div className="absolute top-[10%] right-0 w-[600px] h-[600px] rounded-full bg-[#1D4ED8]/10 blur-[150px] pointer-events-none" />

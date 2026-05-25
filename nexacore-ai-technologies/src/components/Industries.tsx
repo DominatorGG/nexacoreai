@@ -117,7 +117,7 @@ export default function Industries() {
   }, [selectedIndustryIdx]);
 
   return (
-    <div className="relative min-h-screen bg-[#050B14] pt-32 pb-24 overflow-hidden">
+    <div className="relative min-h-screen bg-transparent pt-32 pb-24 overflow-hidden">
       {/* Immersive Background Canvas */}
       <div className="absolute inset-0 cyber-grid opacity-20" />
       <div className="absolute top-[20%] right-[10%] w-[600px] h-[600px] rounded-full bg-[#1D4ED8]/10 blur-[150px] pointer-events-none" />

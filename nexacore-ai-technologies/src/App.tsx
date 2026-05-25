@@ -11,6 +11,7 @@ import Contact from './components/Contact';
 export default function App() {
   const [activePage, setActivePage] = useState<PageId>('home');
   const [isDark, setIsDark] = useState<boolean>(true);
+  const [scrollRatio, setScrollRatio] = useState<number>(0);
 
   // Sync isDark parameter with document root if needed
   useEffect(() => {
@@ -24,6 +25,27 @@ export default function App() {
     }
   }, [isDark]);
 
+  // Track page scroll percentage for cinematic bottom brightness glow
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight > 0) {
+        setScrollRatio(scrollTop / docHeight);
+      } else {
+        setScrollRatio(0);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Initial call
+    handleScroll();
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [activePage]); // recalculate when page shifts to handle different heights
+
   const toggleTheme = () => {
     setIsDark(!isDark);
   };
@@ -31,9 +53,16 @@ export default function App() {
   return (
     <div className={`transition-colors duration-300 ${
       isDark 
-        ? 'dark bg-brand-dark text-neutral-200' 
+        ? 'dark text-neutral-200' 
         : 'light bg-neutral-50 text-neutral-800'
-    }`} style={{ background: isDark ? '#030712' : undefined }}>
+    }`} style={{ 
+      backgroundColor: isDark ? '#030712' : undefined,
+      backgroundImage: isDark 
+        ? `radial-gradient(ellipse at 50% 100%, rgba(37, 99, 235, ${0.12 * scrollRatio}) 0%, rgba(6, 182, 212, ${0.03 * scrollRatio}) 50%, #030712 100%)` 
+        : undefined,
+      backgroundAttachment: 'fixed',
+      backgroundSize: '100% 100%'
+    }}>
       {/* Prime Header Navigation bar */}
       <Header 
         activePage={activePage} 
