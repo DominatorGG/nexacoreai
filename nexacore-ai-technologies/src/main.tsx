@@ -5,7 +5,7 @@ import './index.css';
 
 // Encapsulated secure closure to lock signature values and prevent external modification
 (() => {
-  let author = "Redesigned frontend with excellence by Lohith";
+  let author = "CODEZERO";
   let env = "DEVELOPMENT";
 
   const renderSignature = () => {
